@@ -1,0 +1,67 @@
+#! /bin/zsh
+#	~/.myrc
+
+source ~/.dot/.aliasrc
+
+source ~/.dot/.zshoptrc
+
+source ~/.dot/.colorrc
+
+source ~/.dot/.gccrc
+
+source ~/.dot/.aliasrc
+
+source ~/.dot/.netrc
+
+source ~/.dot/.fedorarc
+
+echo -e "${lgreen}Welcome to zsh by ${cyan}mnciitbhu ${lblue}"
+
+#removes temporary files
+rso()
+{
+  echo -e "${green} Before ${NC}:";
+  ls;
+  echo -e "${red}";
+	for fx in `find . -maxdepth 1 -name "*.out" -o -name "*.s" -o -name "*.lst" -o -name "*.pyc" -o -name "Screen*" \
+		-o -name "*~" -o -name "*#" -o -name "*.o" -o -name ".\#*" -o -name ".fuse_hidden*" -a -type f`; do
+		echo -e "${red}Deleting: ${blue}$fx";
+		#rm $fx;
+	done
+		
+  echo -e "${green} After : ${NC}";
+  ls;
+}
+
+#At StartUp
+echo -e "${blue}GOVIND SAHAI${yellow}";date
+
+#Alt-S inserts "sudo " at the start of line:
+insert_sudo ()
+{
+  zle beginning-of-line;
+  zle -U "sudo "
+}
+zle -N insert-sudo insert_sudo
+bindkey "^[s" insert-sudo
+
+#Alt-M insert "man " at start of line
+insert_man ()
+{
+  zle beginning-of-line;
+  zle -U "man "
+}
+zle -N insert-man insert_man
+bindkey "^[m" insert-man
+
+unset SSH_ASKPASS
+
+eval $(dircolors -b ~/.dot/LS_COLORS)
+
+PATH=/home/mnciitbhu/.anaconda3/bin:$PATH
+
+function swap()         
+{
+  local TMPFILE=tmp.$$;
+	mv "$1" $TMPFILE && mv "$2" "$1" && mv $TMPFILE $2;
+}

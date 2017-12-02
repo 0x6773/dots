@@ -1,0 +1,21 @@
+[user]
+	name = Govind Sahai
+	email = gsiitbhu@gmail.com
+[credential]
+	helper = cache --timeout=360000
+[push]
+	default = matching
+[credential "https://github.com"]
+	username = mnciitbhu
+[credential "https://gitlab.dune-project.org"]
+	username = govind.sahai
+[core]
+	editor = vim
+#[url "https://"]
+#	insteadOf = git://
+[url "https://git.gnome.org/browse/"]
+	insteadOf = git://git.gnome.org/
+[url "http://git.sv.gnu.org/r/"]
+	insteadOf = git://git.sv.gnu.org/
+[url "http://anongit.freedesktop.org/git/"]
+	insteadOf = git://anongit.freedesktop.org/

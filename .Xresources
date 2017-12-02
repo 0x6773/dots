@@ -1,0 +1,104 @@
+!!!!!!!!!! RESOLUTIONS !!!!!!!!!!
+!!!!!!!!!! & SCREEN    !!!!!!!!!!
+!Xft.dpi:		192
+Xft.autohint:	0
+Xft.lcdfilter:  lcddefault
+Xft.hintstyle:  hintfull
+Xft.hinting:	1
+Xft.antialias:  1
+Xft.rgba:		rgb
+
+
+
+!!!!!!!!!! URXVT    !!!!!!!!!!
+!!!!!!!!!! SETTINGS !!!!!!!!!!
+URxvt.perl-ext-common:	   keyboard-select,default,url-select,clipboard,font-size,tabbed
+URxvt.keysym.M-u:          perl:url-select:select_next
+URxvt.keysym.M-Escape:     perl:keyboard-select:activate
+URxvt.url-select.launcher: /opt/firefox/firefox
+URxvt.url-select.underline: true
+
+URxvt*depth: 32
+URxvt*background: rgba: 0000/0000/0200/c800
+
+! copy to primary and clipboard
+URxvt.clipboard.autocopy: true
+
+URxvt.fading:	 10
+URxvt.saveLines: 4095
+URxvt.font: xft:Fira Code:size=11
+
+! transparency
+URxvt.transparent: true
+URxvt.shading: 12
+
+
+
+URxvt.scrollBar: false
+
+! Change font size with keyboard commands on the fly
+URxvt.keysym.C-Up:     font-size:increase
+URxvt.keysym.C-Down:   font-size:decrease
+URxvt.keysym.C-S-Up:   font-size:incglobal
+URxvt.keysym.C-S-Down: font-size:decglobal
+URxvt.keysym.C-equal:  font-size:reset
+URxvt.keysym.C-slash:  font-size:show
+
+!rofi.font:             RobotoMono Nerd Font Mono 24
+!rofi.font:             Wargames Italic 32
+!rofi.font:             HeavyData Nerd Font  32
+
+! Base16 Spacemacs
+! Scheme: Nasser Alshammari (https://github.com/nashamri/spacemacs-theme)
+
+#define base00 #1f2022
+#define base01 #282828
+#define base02 #444155
+#define base03 #585858
+#define base04 #b8b8b8
+#define base05 #a3a3a3
+#define base06 #e8e8e8
+#define base07 #f8f8f8
+#define base08 #f2241f
+#define base09 #ffa500
+#define base0A #b1951d
+#define base0B #67b11d
+#define base0C #2d9574
+#define base0D #4f97d7
+#define base0E #a31db1
+#define base0F #b03060
+
+*.foreground:   base05
+#ifdef background_opacity
+*.background:   [background_opacity]base00
+#else
+*.background:   base00
+#endif
+*.cursorColor:  base05
+
+*.color0:       base00
+*.color1:       base08
+*.color2:       base0B
+*.color3:       base0A
+*.color4:       base0D
+*.color5:       base0E
+*.color6:       base0C
+*.color7:       base05
+
+*.color8:       base03
+*.color9:       base08
+*.color10:      base0B
+*.color11:      base0A
+*.color12:      base0D
+*.color13:      base0E
+*.color14:      base0C
+*.color15:      base07
+
+! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
+! use 'shell' template to set these if necessary
+*.color16:      base09
+*.color17:      base0F
+*.color18:      base01
+*.color19:      base02
+*.color20:      base04
+*.color21:      base06

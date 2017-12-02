@@ -1,0 +1,274 @@
+#! /bin/zsh
+# ~/.dot/.gccrc
+
+#
+
+# For use with GCC(g++ or gcc) & clang
+
+#
+
+g+c()
+{
+  echo "${yellow}Implemented So far : "
+  echo "\t${lblue}gg++ :${lgreen}: Compiling & Linking C++ using \t${lred}g++"
+  echo "\t${lblue}ga++ :${lgreen}: To View Assembler Code C++ using ${lred}g++"
+  echo ""
+  echo "\t${lblue}ggcc :${lgreen}: Compiling & Linking C using \t${lred}gcc"
+  echo "\t${lblue}gacc :${lgreen}: To View Assembler Code C using \t${lred}gcc"
+  echo ""
+  echo "\t${lblue}cg++ :${lgreen}: Compiling & Linking C++ using \t${lred}clang++"
+  echo "\t${lblue}cgcc :${lgreen}: Compiling & Linking C using \t${lred}clang"
+  echo ""
+  echo "\t${lblue}asm  :${lgreen}: Compiling & Linking Assembly Code"
+}
+alias c+g=g+c
+
+# Used in gg++, ga++ and cg++
+__CPP=('-Wall' '-Wextra' '-pedantic' '-pthread' '-O0' '-g' '-Wshadow'
+'-Wformat' '-Wfloat-equal' '-Wcast-qual' '-Wcast-align' '-Weffc++'
+'-D_GLIBCXX_DEBUG_PEDANTIC' #'-I/home/mnciitbhu/Git_Clones/hana/include'
+)
+
+# Used in ggcc, gacc and cgcc
+__CC=('-O0' '-g' '-std=c11' '-pedantic' '-Wall' '-Wextra')
+
+# Used in gg++
+__COMM=('g++' '-std=c++1z' $__CPP)
+
+#gcc function
+gg++()
+{
+  filename="$1"
+
+  __OTHER_ARG=()
+  for arg in $(echo ${*:2}|tr ' ' '\n');
+  do
+    __OTHER_ARG=($__OTHER_ARG $arg)
+  done
+
+	filecpp="$filename"
+	outputfile="$filename.out"
+
+  echo -e  "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+  if test -e "$outputfile"; then
+    rm "$outputfile"
+  fi
+
+  echo -e "${yellow}Running : time${lblue} $__COMM $filecpp $__OTHER_ARG -o $outputfile  ${cyan}";
+  time $__COMM $filecpp $__OTHER_ARG -o $outputfile;
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+
+	echo "";
+
+	echo -e "time ${green}OUTPUT: ./$outputfile ${cyan}";
+	time ./$outputfile;
+
+	echo "\n";
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+}
+
+# Used in ga++
+__COMMS=('g++' '-std=c++1z' $__CPP '-S' '-masm=intel')
+
+# creating assembler
+ga++()
+{
+  filename="$1"
+
+  __OTHER_ARG=()
+  for arg in $(echo ${*:2}|tr ' ' '\n');
+  do
+    __OTHER_ARG=($__OTHER_ARG $arg)
+  done
+
+  filecpp="$filename"
+  files="$filename.s"
+  fileasm="$filename.asm"
+
+  echo -e  "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+  if test -e "$files";then
+    rm "$files"
+  fi
+
+  if test -e "$fileasm";then
+    rm "$fileasm"
+  fi
+
+  echo -e "${yellow}Running : time ${lblue}$__COMMS $filecpp $__OTHER_ARG -o $files ${cyan}";
+	time $__COMMS $filecpp $__OTHER_ARG -o $files;
+
+  echo ""
+
+  echo -e "${yellow}Running : time ${lblue}as -alhnd $files > $fileasm"
+  time as -alhnd $files > $fileasm
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+
+	echo "";
+}
+
+__COMMC=('gcc' $__CC)
+
+ggcc()
+{
+  filename="$1"
+
+  __OTHER_ARG=()
+  for arg in $(echo ${*:2}|tr ' ' '\n');
+  do
+    __OTHER_ARG=($__OTHER_ARG $arg)
+  done
+
+  filec="$filename"
+  outputfile="$filename.out"
+
+  echo -e  "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+  if test -e "$outputfile";then
+    rm "$outputfile"
+  fi
+
+  echo -e "${yellow}Running : time ${lblue}$__COMMC $__OTHER_ARG $filec -o $outputfile  ${cyan}";
+  time $__COMMC $__OTHER_ARG $filec -o $outputfile;
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+
+  echo "";
+
+  echo -e "time ${green}OUTPUT: ./$outputfile ${cyan}";
+	time ./$outputfile;
+
+  echo "\n";
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+}
+
+__COMMCS=('gcc' $__CC '-S' '-masm=intel')
+
+gacc()
+{
+  filename="$1"
+
+  __OTHER_ARG=()
+  for arg in $(echo ${*:2}|tr ' ' '\n');
+  do
+    __OTHER_ARG=($__OTHER_ARG $arg)
+  done
+
+  filec="$filename"
+  files="$filename.s"
+  fileasm="$filename.asm"
+
+  echo -e  "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+  if test -e "$files";then
+    rm "$files"
+  fi
+
+  if test -e "$fileasm";then
+    rm "$fileasm"
+  fi
+
+  echo -e "${yellow}Running : time ${lblue}$__COMMCS $__OTHER_ARG $filec -o $files ${cyan}";
+	time $__COMMCS $__OTHER_ARG $filec -o $files;
+
+  echo ""
+
+  echo -e "${yellow}Running : time ${lblue}as -alhnd $files > $fileasm"
+  time as -alhnd $files > $fileasm
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+
+  echo "";
+}
+
+# Used in cg++
+#__COMMGC=('clang++' '-std=c++1z'  '-stdlib=libc++' $__CPP)
+__COMMGC=('clang++' '-std=c++1z' $__CPP)
+
+#gcc function
+cg++()
+{
+  filename="$1"
+
+  __OTHER_ARG=()
+  for arg in $(echo ${*:2}|tr ' ' '\n');
+  do
+    __OTHER_ARG=($__OTHER_ARG $arg)
+  done
+
+	filecpp="$filename"
+	outputfile="$filename.out"
+
+  echo -e  "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+  if test -e "$outputfile"; then
+    rm "$outputfile"
+  fi
+
+  echo -e "${yellow}Running : time${lblue} $__COMMGC $__OTHER_ARG $filecpp -o $outputfile  ${cyan}";
+  time $__COMMGC $__OTHER_ARG $filecpp -o $outputfile;
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+
+	echo "";
+
+	echo -e "time ${green}OUTPUT: ./$outputfile ${cyan}";
+	time ./$outputfile;
+
+	echo "\n";
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+}
+
+__COMMCCG=('clang' $__CC)
+
+cgcc()
+{
+  filename="$1"
+
+  __OTHER_ARG=()
+  for arg in $(echo ${*:2}|tr ' ' '\n');
+  do
+    __OTHER_ARG=($__OTHER_ARG $arg)
+  done
+
+  filec="$filename"
+  outputfile="$filename.out"
+
+  echo -e  "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+  if test -e "$outputfile";then
+    rm "$outputfile"
+  fi
+
+  echo -e "${yellow}Running : time ${lblue}$__COMMCCG $__OTHER_ARG $filec -o $outputfile  ${cyan}";
+  time $__COMMCCG $__OTHER_ARG $filec -o $outputfile;
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+
+  echo "";
+
+  echo -e "time ${green}OUTPUT: ./$outputfile ${cyan}";
+	time ./$outputfile;
+
+  echo "\n";
+
+  echo -e "${green}--------------------------------------------------------------------------------------------------------------------------------------------------"
+}
+
+# For Assembly Code
+asm()
+{
+  fileName="$1"
+  asmFile="$fileName"
+  oFile="$fileName.o"
+  outFile="$fileName.out"
+
+  nasm -f elf64 -o $oFile $asmFile;
+  ld -s -o $outFile $oFile;
+  ./$outFile
+
+  if test -e "$oFile";then
+    rm "$oFile"
+  fi
+
+}

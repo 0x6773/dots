@@ -1,0 +1,37 @@
+#! /bin/zsh
+# ~/.dot/.aliasrc
+
+#
+
+# All alias here
+
+#
+
+#alias to copy all required files to GitClone/Codes
+alias gccp='zsh ~/Git_Clones/dot/main/linux/copy.sh'
+
+#alias
+alias .='cd ..'
+alias ..='cd ../..'
+alias cc='cd ~/Codes/CPP/'
+alias c.='cd ~/Codes/'
+alias v='vim'
+
+alias lf='ls -F -o --color | grep ^- --color=never'
+alias lk='ls -F -o --color | grep ^l --color=never'
+alias lx='ls -F -o --color | grep ^-..x --color=never'
+
+alias p4='proxychains4'
+
+#copy
+cz()
+{
+  echo "$($@)"|xclip -selection clipboard
+}
+
+alias sl="ls"
+
+rana()
+{
+	PATH=$(echo "$PATH"|sed -e 's/:\/home\/mnciitbhu\/\.anaconda3\/bin//')
+}

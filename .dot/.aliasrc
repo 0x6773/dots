@@ -8,7 +8,7 @@
 #
 
 #alias to copy all required files to GitClone/Codes
-alias gccp='zsh ~/Git_Clones/dot/main/linux/copy.sh'
+alias gccp='zsh ~/Git_Clones/dots/copy.sh'
 
 #alias
 alias .='cd ..'

@@ -15,6 +15,8 @@ source ~/.dot/.netrc
 
 source ~/.dot/.fedorarc
 
+source ~/.dot/.tunnelsshrc
+
 echo -e "${lgreen}Welcome to zsh by ${cyan}mnciitbhu ${lblue}"
 
 #removes temporary files
@@ -65,3 +67,7 @@ function swap()
   local TMPFILE=tmp.$$;
 	mv "$1" $TMPFILE && mv "$2" "$1" && mv $TMPFILE $2;
 }
+
+echo "xhost +local:"
+echo -e -n "${red}"
+#python ~/.dot/loss.py

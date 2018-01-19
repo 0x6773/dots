@@ -17,6 +17,7 @@ URxvt.keysym.M-u:          perl:url-select:select_next
 URxvt.keysym.M-Escape:     perl:keyboard-select:activate
 URxvt.url-select.launcher: /opt/firefox/firefox
 URxvt.url-select.underline: true
+URxvt.letterSpace: -1
 
 URxvt*depth: 32
 URxvt*background: rgba: 0000/0000/0200/c800
@@ -26,7 +27,7 @@ URxvt.clipboard.autocopy: true
 
 URxvt.fading:	 10
 URxvt.saveLines: 4095
-URxvt.font: xft:Fira Code:size=11
+URxvt.font: xft:mono:medium:size=11
 
 ! transparency
 URxvt.transparent: true

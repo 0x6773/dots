@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# Author: Dolores Portalatin <hello@doloresportalatin.info>
+# Dependencies: imagemagick, i3lock-color-git, scrot, wmctrl (optional)
+set -o errexit -o noclobber -o nounset
+
+HUE=(-level 0%,100%,0.6)
+EFFECT=(-filter Gaussian -resize 20% -define filter:sigma=1.5 -resize 500.5%)
+# default system sans-serif font
+FONT="$(convert -list font | awk "{ a[NR] = \$2 } /family: $(fc-match sans -f "%{family}\n")/ { print a[NR-1]; exit }")"
+FILENAME="$(mktemp)"
+IMAGE="$FILENAME.png"
+DESKTOP=""
+
+OPTIONS="Options:
+    -h, --help   This help menu.
+    -d, --desktop    Attempt to minimize all windows before locking.
+    -g, --greyscale  Set background to greyscale instead of color.
+    -p, --pixelate   Pixelate the background instead of blur, runs faster.
+    -f <fontname>, --font <fontname>  Set a custom font.
+    -l, --listfonts  Display a list of possible fonts for use with -f/--font.
+                     Note: this option will not lock the screen, it displays
+                     the list and exits immediately."
+
+# move pipefail down as for some reason "convert -list font" returns 1
+set -o pipefail
+trap 'rm -f "$IMAGE"' EXIT
+TEMP="$(getopt -o :hdpglf: -l help,pixelate,greyscale,font: --name "$0" -- "$@")"
+eval set -- "$TEMP"
+
+while true ; do
+    case "$1" in
+        -h|--help)
+            printf "Usage: $(basename $0) [options]\n\n$OPTIONS\n\n" ; exit 1 ;;
+        -d|--desktop) DESKTOP=$(which wmctrl) ; shift ;;
+        -g|--greyscale) HUE=(-level 0%,100%,0.6 -set colorspace Gray -separate -average) ; shift ;;
+        -p|--pixelate) EFFECT=(-scale 10% -scale 1000%) ; shift ;;
+        -f|--font)
+            case "$2" in
+                "") shift 2 ;;
+                *) FONT=$2 ; shift 2 ;;
+            esac ;;
+        -l|--listfonts) convert -list font | awk -F: '/Font: / { print $2 }' | sort -du | ${PAGER:-less} ; exit 0 ;;
+        --) shift ; break ;;
+        *) echo "error" ; exit 1 ;;
+    esac
+done
+
+SCRIPTPATH="/usr/share/i3lock-fancy"
+
+TEXT=""
+
+VALUE="60" #brightness value to compare to
+scrot "$IMAGE"
+COLOR=$(convert "$IMAGE" -gravity center -crop 100x100+0+0 +repage -colorspace hsb \
+    -resize 1x1 txt:- | awk -F '[%$]' 'NR==2{gsub(",",""); printf "%.0f\n", $(NF-1)}');
+if [ "$COLOR" -gt "$VALUE" ]; then #white background image and black text
+    BW="black"
+    ICON="$SCRIPTPATH/lockdark.png"
+    PARAM=(--textcolor=00000000 --insidecolor=0000001c --ringcolor=0000003e \
+        --linecolor=00000000 --keyhlcolor=ffffff80 --ringvercolor=ffffff00 \
+        --separatorcolor=22222260 --insidevercolor=ffffff1c \
+        --ringwrongcolor=ffffff55 --insidewrongcolor=ffffff1c)
+else #black
+    BW="white"
+    ICON="$SCRIPTPATH/lock.png"
+    PARAM=(--textcolor=ffffff00 --insidecolor=ffffff1c --ringcolor=ffffff3e \
+        --linecolor=ffffff00 --keyhlcolor=00000080 --ringvercolor=00000000 \
+        --separatorcolor=22222260 --insidevercolor=0000001c \
+        --ringwrongcolor=00000055 --insidewrongcolor=0000001c)
+fi
+
+convert "$IMAGE" "${HUE[@]}" "${EFFECT[@]}" "$IMAGE"
+
+RR=$RANDOM
+#RR=7
+TOT=7
+
+if (( $RR % $TOT == 0 )); then
+	convert "$IMAGE" -page +483+75 /home/mnciitbhu/.wallpapers/logo/logo-cyberpunks.png -coalesce "$IMAGE"
+elif (( $RR % $TOT == 1 )); then
+	convert "$IMAGE" -page +0+0 /home/mnciitbhu/.wallpapers/logo/eNHZ8SG.png -coalesce "$IMAGE"
+elif (( $RR % $TOT == 2 )); then
+	convert "$IMAGE" -page +0+0 /home/mnciitbhu/.wallpapers/logo/cpp.png -coalesce "$IMAGE"
+elif (( $RR % $TOT == 3 )); then
+	convert "$IMAGE" -page +0+0 /home/mnciitbhu/.wallpapers/logo/noplacelike.png -coalesce "$IMAGE"
+elif (( $RR % $TOT == 4 )); then
+	convert "$IMAGE" -page +0+0 /home/mnciitbhu/.wallpapers/logo/got1.png -coalesce "$IMAGE"
+elif (( $RR % $TOT == 5 )); then
+	convert "$IMAGE" -page +0+0 /home/mnciitbhu/.wallpapers/logo/skull.png -coalesce "$IMAGE"
+elif (( $RR % $TOT == 6 )); then
+	convert "$IMAGE" -page +0+0 /home/mnciitbhu/.wallpapers/logo/pokemon.png -coalesce "$IMAGE"
+fi
+
+IMAGE="$FILENAME-1.png"
+
+# If invoked with -d/--desktop, we'll attempt to minimize all windows (ie. show
+# the desktop) before locking.
+${DESKTOP} ${DESKTOP:+-k on}
+
+# try to use a forked version of i3lock with prepared parameters
+if ! i3lock -e -n "${PARAM[@]}" -i "$IMAGE" > /dev/null 2>&1; then
+    # We have failed, lets get back to stock one
+    i3lock -e -n -i "$IMAGE"
+fi
+
+# As above, if we were passed -d/--desktop, we'll attempt to restore all windows
+# after unlocking.
+${DESKTOP} ${DESKTOP:+-k off}
+
+# Use below code for creating transparency
+if false
+then
+	color=$( convert filename.png -format "%[pixel:p{0,0}]" info:- )
+convert filename.png -alpha off -bordercolor $color -border 1 \
+    \( +clone -fuzz 30% -fill none -floodfill +0+0 $color \
+       -alpha extract -geometry 200% -blur 0x0.5 \
+       -morphology erode square:1 -geometry 50% \) \
+    -compose CopyOpacity -composite -shave 1 outputfilename.png
+fi

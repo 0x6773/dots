@@ -13,7 +13,7 @@ source ~/.dot/.aliasrc
 
 source ~/.dot/.netrc
 
-source ~/.dot/.fedorarc
+source ~/.dot/.volumerc
 
 source ~/.dot/.tunnelsshrc
 

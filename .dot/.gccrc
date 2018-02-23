@@ -26,14 +26,14 @@ alias c+g=g+c
 # Used in gg++, ga++ and cg++
 __CPP=('-Wall' '-Wextra' '-pedantic' '-pthread' '-O0' '-g' '-Wshadow'
 '-Wformat' '-Wfloat-equal' '-Wcast-qual' '-Wcast-align' '-Weffc++'
-'-D_GLIBCXX_DEBUG_PEDANTIC' #'-I/home/mnciitbhu/Git_Clones/hana/include'
+'-D_GLIBCXX_DEBUG_PEDANTIC'
 )
 
 # Used in ggcc, gacc and cgcc
 __CC=('-O0' '-g' '-std=c11' '-pedantic' '-Wall' '-Wextra')
 
 # Used in gg++
-__COMM=('g++' '-std=c++11' $__CPP)
+__COMM=('g++' '-std=c++1z' $__CPP)
 
 #gcc function
 gg++()

@@ -6,6 +6,7 @@ SCREENSSHNAME="ssh4tunnel"
 SCREENTUNNAME="tun2socks"
 PORT="1235"
 USER="mnciitbhu"
+#USER="root"
 SERVER="139.59.94.159"
 DNSSERVER="8.8.8.8"
 TUNXIP="192.168.0.1"
@@ -50,11 +51,13 @@ _route_tun()
         echo "Setting routes"
         sudo route add $SERVER gw $NETGW metric 5
         sudo route add $DNSSERVER gw $NETGW metric 5
+				sudo route add -net 10.0.0.0/8 gw $NETGW metric 5
         sudo route add default gw $TUN2SOCKSIP metric 6
     else
         echo "Deleting routes"
         sudo route del $SERVER gw $NETGW metric 5
         sudo route del $DNSSERVER gw $NETGW metric 5
+				sudo route del -net 10.0.0.0/8 gw $NETGW metric 5
         sudo route del default gw $TUN2SOCKSIP metric 6
     fi
 }
@@ -75,4 +78,10 @@ stop_tun()
     _route_tun 1
     _screen_tun 1
     _interface_tun 1
+}
+
+restart_tun()
+{
+	stop_tun
+	start_tun
 }

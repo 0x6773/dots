@@ -1,6 +1,7 @@
 [user]
 	name = Govind Sahai
 	email = gsiitbhu@gmail.com
+	signingkey = 8F03E619822EE19B
 [credential]
 	helper = cache --timeout=360000
 [push]
@@ -19,3 +20,5 @@
 	insteadOf = git://git.sv.gnu.org/
 [url "http://anongit.freedesktop.org/git/"]
 	insteadOf = git://anongit.freedesktop.org/
+[commit]
+	gpgsign = true

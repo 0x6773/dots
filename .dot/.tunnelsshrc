@@ -17,67 +17,67 @@ BADVPN="/home/mnciitbhu/badvpn/badvpn-build/tun2socks/badvpn-tun2socks"
 
 _interface_tun()
 {
-    mode=$1
-    if [ $mode -eq 0 ]; then
-        echo "Creating interface $INTERFACE"
-        sudo ip tuntap add dev $INTERFACE mode tun user $USER
-        echo "Setting ip settings to $INTERFACE"
-        sudo ifconfig $INTERFACE $TUNXIP netmask $TUNXMASK
-    else
-        echo "Destroying interface $INTERFACE"
-        sudo ip tuntap del dev $INTERFACE mode tun
-    fi
+	mode=$1
+	if [ $mode -eq 0 ]; then
+		echo "Creating interface $INTERFACE"
+		sudo ip tuntap add dev $INTERFACE mode tun user $USER
+		echo "Setting ip settings to $INTERFACE"
+		sudo ifconfig $INTERFACE $TUNXIP netmask $TUNXMASK
+	else
+		echo "Destroying interface $INTERFACE"
+		sudo ip tuntap del dev $INTERFACE mode tun
+	fi
 }
 
 _screen_tun()
 {
-    mode=$1
-    if [ $mode -eq 0 ]; then
-        echo "Starting ssh"
-        screen -d -m -S $SCREENSSHNAME ssh -D$PORT $USER@$SERVER
-        echo "Starting tun2socks"
-        screen -d -m -S $SCREENTUNNAME $BADVPN  --tundev $INTERFACE --netif-ipaddr $TUN2SOCKSIP --netif-netmask $TUNXMASK --socks-server-addr 127.0.0.1:$PORT
-    else
-        echo "Destroying screens"
-        screen -S $SCREENSSHNAME -X quit
-        screen -S $SCREENTUNNAME -X quit
-    fi
+	mode=$1
+	if [ $mode -eq 0 ]; then
+		echo "Starting ssh"
+		screen -d -m -S $SCREENSSHNAME ssh -D$PORT $USER@$SERVER
+		echo "Starting tun2socks"
+		screen -d -m -S $SCREENTUNNAME $BADVPN  --tundev $INTERFACE --netif-ipaddr $TUN2SOCKSIP --netif-netmask $TUNXMASK --socks-server-addr 127.0.0.1:$PORT
+	else
+		echo "Destroying screens"
+		screen -S $SCREENSSHNAME -X quit
+		screen -S $SCREENTUNNAME -X quit
+	fi
 }
 
 _route_tun()
 {
-    mode=$1
-    if [ $mode -eq 0 ]; then
-        echo "Setting routes"
-        sudo route add $SERVER gw $NETGW metric 5
-        sudo route add $DNSSERVER gw $NETGW metric 5
-				sudo route add -net 10.0.0.0/8 gw $NETGW metric 5
-        sudo route add default gw $TUN2SOCKSIP metric 6
-    else
-        echo "Deleting routes"
-        sudo route del $SERVER gw $NETGW metric 5
-        sudo route del $DNSSERVER gw $NETGW metric 5
-				sudo route del -net 10.0.0.0/8 gw $NETGW metric 5
-        sudo route del default gw $TUN2SOCKSIP metric 6
-    fi
+	mode=$1
+	if [ $mode -eq 0 ]; then
+		echo "Setting routes"
+		sudo route add $SERVER gw $NETGW metric 5
+		sudo route add $DNSSERVER gw $NETGW metric 5
+		sudo route add -net 10.0.0.0/8 gw $NETGW metric 5
+		sudo route add default gw $TUN2SOCKSIP metric 6
+	else
+		echo "Deleting routes"
+		sudo route del $SERVER gw $NETGW metric 5
+		sudo route del $DNSSERVER gw $NETGW metric 5
+		sudo route del -net 10.0.0.0/8 gw $NETGW metric 5
+		sudo route del default gw $TUN2SOCKSIP metric 6
+	fi
 }
 
 start_tun()
 {
-    # 0 for start
-    # 1 for top
-    _interface_tun 0
-    _screen_tun 0
-    _route_tun 0
+	# 0 for start
+	# 1 for top
+	_interface_tun 0
+	_screen_tun 0
+	_route_tun 0
 }
 
 stop_tun()
 {
-    # 0 for start
-    # 1 for top
-    _route_tun 1
-    _screen_tun 1
-    _interface_tun 1
+	# 0 for start
+	# 1 for top
+	_route_tun 1
+	_screen_tun 1
+	_interface_tun 1
 }
 
 restart_tun()

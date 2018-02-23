@@ -12,13 +12,5 @@
 	username = govind.sahai
 [core]
 	editor = vim
-#[url "https://"]
-#	insteadOf = git://
-[url "https://git.gnome.org/browse/"]
-	insteadOf = git://git.gnome.org/
-[url "http://git.sv.gnu.org/r/"]
-	insteadOf = git://git.sv.gnu.org/
-[url "http://anongit.freedesktop.org/git/"]
-	insteadOf = git://anongit.freedesktop.org/
 [commit]
 	gpgsign = true

@@ -1,6 +1,7 @@
 #! /bin/zsh
 # ~/.dot/.netrc
 
+INTERFACENET=$(route -nve|grep -e '^0.0.0.0'|grep -o '[^ ]*$')
 INTERFACE="tun2socks"
 SCREENSSHNAME="ssh4tunnel"
 SCREENTUNNAME="tun2socks"
@@ -8,11 +9,12 @@ PORT="1235"
 USER="mnciitbhu"
 #USER="root"
 SERVER="139.59.94.159"
-DNSSERVER="8.8.8.8"
-TUNXIP="192.168.0.1"
+DNSSERVER=$(cat /etc/resolv.conf|grep nameserver|head -1|grep -o '[^ ]*$')
+TUNIPPRE="172.17.0"
+TUNXIP="$TUNIPPRE.1"
 TUNXMASK="255.255.255.0"
-TUN2SOCKSIP="192.168.0.2"
-NETGW="172.17.0.1"
+TUN2SOCKSIP="$TUNIPPRE.2"
+NETGW=$(route -nve|grep -e '^0.0.0.0'|awk '{print $2}')
 BADVPN="/home/mnciitbhu/badvpn/badvpn-build/tun2socks/badvpn-tun2socks"
 
 _interface_tun()

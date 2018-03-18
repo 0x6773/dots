@@ -87,4 +87,4 @@ export TERM="xterm-256color"
 
 autoload -U compinit && compinit
 
-export PATH="/home/mnciitbhu/.nodejs/node-v8.9.0-linux-x64/bin:/home/mnciitbhu/.cling/bin/:/home/mnciitbhu/.andro/:$PATH"
+export PATH="/home/mnciitbhu/.gem/ruby/2.5.0/bin:$PATH"

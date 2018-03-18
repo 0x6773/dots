@@ -1,21 +1,19 @@
 #! /bin/zsh
-# ~/.dot/.netrc
+# ~/.dot/.tunnelsshrc
 
 INTERFACENET=$(route -nve|grep -e '^0.0.0.0'|grep -o '[^ ]*$')
 INTERFACE="tun2socks"
 SCREENSSHNAME="ssh4tunnel"
 SCREENTUNNAME="tun2socks"
 PORT="1235"
-USER="mnciitbhu"
-#USER="root"
-SERVER="139.59.94.159"
 DNSSERVER=$(cat /etc/resolv.conf|grep nameserver|head -1|grep -o '[^ ]*$')
-TUNIPPRE="172.17.0"
+USER_SERVER=""
+TUNIPPRE="192.168.0"
 TUNXIP="$TUNIPPRE.1"
 TUNXMASK="255.255.255.0"
 TUN2SOCKSIP="$TUNIPPRE.2"
 NETGW=$(route -nve|grep -e '^0.0.0.0'|awk '{print $2}')
-BADVPN="/home/mnciitbhu/badvpn/badvpn-build/tun2socks/badvpn-tun2socks"
+BADVPN="$HOME/badvpn/badvpn-build/tun2socks/badvpn-tun2socks"
 
 _interface_tun()
 {
@@ -36,7 +34,7 @@ _screen_tun()
 	mode=$1
 	if [ $mode -eq 0 ]; then
 		echo "Starting ssh"
-		screen -d -m -S $SCREENSSHNAME ssh -D$PORT $USER@$SERVER
+		screen -d -m -S $SCREENSSHNAME ssh -D$PORT $USER_SERVER
 		echo "Starting tun2socks"
 		screen -d -m -S $SCREENTUNNAME $BADVPN  --tundev $INTERFACE --netif-ipaddr $TUN2SOCKSIP --netif-netmask $TUNXMASK --socks-server-addr 127.0.0.1:$PORT
 	else
@@ -66,8 +64,21 @@ _route_tun()
 
 start_tun()
 {
+	__US_FILE="$HOME/.dot/user_server.ignore"
+	if [[ -f  $__US_FILE ]]; then
+		USER_SERVER="$(cat $__US_FILE)"
+	elif [[ $# -ge 1 ]]; then
+		USER_SERVER="$1"
+		echo $USER_SERVER > $__US_FILE
+	else
+		echo "Usage: $0 USER@SERVER"
+		return
+	fi
+
+	SERVER=$(echo "$USER_SERVER"|grep -Po "(?<=@).*")
+	
 	# 0 for start
-	# 1 for top
+	# 1 for stop
 	_interface_tun 0
 	_screen_tun 0
 	_route_tun 0
@@ -76,7 +87,7 @@ start_tun()
 stop_tun()
 {
 	# 0 for start
-	# 1 for top
+	# 1 for stop
 	_route_tun 1
 	_screen_tun 1
 	_interface_tun 1

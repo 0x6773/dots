@@ -60,14 +60,12 @@ unset SSH_ASKPASS
 
 eval $(dircolors -b ~/.dot/LS_COLORS)
 
-PATH=/home/mnciitbhu/.anaconda3/bin:$PATH
 
 function swap()         
 {
   local TMPFILE=tmp.$$;
 	mv "$1" $TMPFILE && mv "$2" "$1" && mv $TMPFILE $2;
 }
-
 echo "xhost +local:"
 echo -e -n "${red}"
 #python ~/.dot/loss.py

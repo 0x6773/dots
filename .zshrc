@@ -87,4 +87,4 @@ export TERM="xterm-256color"
 
 autoload -U compinit && compinit
 
-export PATH="/home/mnciitbhu/.gem/ruby/2.5.0/bin:$PATH"
+export PATH="$HOME/.gem/ruby/2.5.0/bin:$HOME/.anaconda3/bin:/usr/bin/vendor_perl:/opt/android-sdk/platform-tools:$PATH"

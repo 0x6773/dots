@@ -86,6 +86,15 @@ start_tun()
 
 stop_tun()
 {
+	__US_FILE="$HOME/.dot/user_server.ignore"
+	if [[ -f  $__US_FILE ]]; then
+		USER_SERVER="$(cat $__US_FILE)"
+	else
+		echo "This should not happen"
+		return
+	fi
+
+	SERVER=$(echo "$USER_SERVER"|grep -Po "(?<=@).*")
 	# 0 for start
 	# 1 for stop
 	_route_tun 1

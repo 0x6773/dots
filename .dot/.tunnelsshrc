@@ -15,6 +15,11 @@ TUN2SOCKSIP="$TUNIPPRE.2"
 NETGW=$(route -nve|grep -e '^0.0.0.0'|awk '{print $2}')
 BADVPN="$HOME/badvpn/badvpn-build/tun2socks/badvpn-tun2socks"
 
+# save last connected server to file
+__US_FILE="$HOME/.dot/user_server.ignore"
+# check so that not able to reconnect
+__RN_FILE="$HOME/.dot/tunnel_check.ignore"
+
 _interface_tun()
 {
 	mode=$1
@@ -66,16 +71,29 @@ _route_tun()
 
 start_tun()
 {
-	__US_FILE="$HOME/.dot/user_server.ignore"
-	if [[ -f  $__US_FILE ]]; then
-		USER_SERVER="$(cat $__US_FILE)"
-	elif [[ $# -ge 1 ]]; then
+	# check if server is provided as argument
+	if [[ $# -ge 1 ]]; then
 		USER_SERVER="$1"
 		echo $USER_SERVER > $__US_FILE
+	# or connect to last connected
+	elif [[ -f  $__US_FILE ]]; then
+		USER_SERVER="$(cat $__US_FILE)"
+	# or print usage
 	else
 		echo "Usage: $0 USER@SERVER"
 		return
 	fi
+
+	if [[ ! -f  $__RN_FILE ]]; then
+		echo "0" > $__RN_FILE;
+	else
+		__RN_STATUS="$(cat $__RN_FILE)"
+		if [[ "$__RN_STATUS" = "1" ]]; then
+			echo "${red}Already running. ${green}restart or stop";
+			return;
+		fi
+	fi
+
 
 	SERVER=$(echo "$USER_SERVER"|grep -Po "(?<=@).*")
 	
@@ -84,16 +102,26 @@ start_tun()
 	_interface_tun 0
 	_screen_tun 0
 	_route_tun 0
+	echo "1" > $__RN_FILE;
 }
 
 stop_tun()
 {
-	__US_FILE="$HOME/.dot/user_server.ignore"
 	if [[ -f  $__US_FILE ]]; then
 		USER_SERVER="$(cat $__US_FILE)"
 	else
 		echo "This should not happen"
 		return
+	fi
+
+	if [[ ! -f  $__RN_FILE ]]; then
+		echo "0" > $__RN_FILE;
+	else
+		__RN_STATUS="$(cat $__RN_FILE)"
+		if [[ "$__RN_STATUS" = "0" ]]; then
+			echo "${red}Not running. ${green}start first";
+			return;
+		fi
 	fi
 
 	SERVER=$(echo "$USER_SERVER"|grep -Po "(?<=@).*")
@@ -102,6 +130,8 @@ stop_tun()
 	_route_tun 1
 	_screen_tun 1
 	_interface_tun 1
+
+	echo "0" > $__RN_FILE;
 }
 
 restart_tun()

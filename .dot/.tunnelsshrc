@@ -104,6 +104,7 @@ start_tun()
 	_route_tun 0
 	echo "1" > $__RN_FILE;
 
+	echo "sleep 5s; curl ipinfo.io : "
 	sleep 5s;
 	curl ipinfo.io;
 }
@@ -135,6 +136,8 @@ stop_tun()
 	_interface_tun 1
 
 	echo "0" > $__RN_FILE;
+
+	echo "curl ipinfo.io : "
 	curl ipinfo.io;
 }
 

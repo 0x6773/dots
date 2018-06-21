@@ -86,6 +86,6 @@ source $ZSH/oh-my-zsh.sh
 source ~/.myrc
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=12"
-export TERM="xterm-256color"
+#export TERM="xterm-256color"
 
 autoload -U compinit && compinit

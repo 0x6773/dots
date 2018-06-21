@@ -1,0 +1,36 @@
+#!/bin/bash
+
+file="/sys/class/backlight/acpi_video0/brightness"
+
+showBrightness()
+{
+	curr=$(cat $file)
+	if [[ curr -ge 12 ]]; then
+		printf "<span color='#5B1AFF'>☀ $curr</span>"
+	elif [[ curr -ge 6 ]]; then
+		printf "<span color='#8B5CFF'>☀ $curr</span>"
+	else
+		printf "<span color='#D7C7FF'>☀ $curr</span>"
+	fi
+}
+
+incBrightness()
+{
+	curr=$(cat $file)
+	ncurr=$((curr + 1))
+	sudo su -c "echo $ncurr > $file"
+}
+
+decBrightness()
+{
+	curr=$(cat $file)
+	ncurr=$((curr - 1))
+	sudo su -c "echo $ncurr > $file"
+}
+
+case $BLOCK_BUTTON in
+  4) incBrightness ;;
+  5) decBrightness ;;
+esac
+
+showBrightness

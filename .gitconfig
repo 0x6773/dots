@@ -16,3 +16,5 @@
 	insteadOf = gh:
 [url "https://aur.archlinux.org/"]
 	insteadOf = aur:
+[url "git@bitbucket.org:"]
+	insteadOf = gb:

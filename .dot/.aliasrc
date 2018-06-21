@@ -17,12 +17,6 @@ alias cc='cd ~/Codes/CPP/'
 alias c.='cd ~/Codes/'
 alias v='vim'
 
-alias lf='ls -F -o --color | grep ^- --color=never'
-alias lk='ls -F -o --color | grep ^l --color=never'
-alias lx='ls -F -o --color | grep ^-..x --color=never'
-
-alias p4='proxychains4'
-
 #copy
 cz()
 {
@@ -30,8 +24,3 @@ cz()
 }
 
 alias sl="ls"
-
-rana()
-{
-	PATH=$(echo "$PATH"|sed -e 's/:\/home\/mnciitbhu\/\.anaconda3\/bin//')
-}

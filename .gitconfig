@@ -8,9 +8,11 @@
 	default = matching
 [credential "https://github.com"]
 	username = mnciitbhu
-[credential "https://gitlab.dune-project.org"]
-	username = govind.sahai
 [core]
 	editor = vim
 [commit]
 	gpgsign = true
+[url "git@github.com:"]
+	insteadOf = gh:
+[url "https://aur.archlinux.org/"]
+	insteadOf = aur:

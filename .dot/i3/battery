@@ -1,9 +1,0 @@
-#! /bin/zsh
-
-batx=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0)
-state=$(echo "$batx"|grep state|awk '{print $2}')
-perc=$(echo "$batx"|grep percentage|awk '{print $2}')
-timeleft=$(echo "$batx"|grep time|awk '{print $4,$5}')
-
-echo "$state $perc $timeleft"
-

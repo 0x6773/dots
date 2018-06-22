@@ -6,7 +6,7 @@ export ZSH=/home/mnciitbhu/.oh-my-zsh
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 
-ZSH_THEME="robbyrussell"
+ZSH_THEME="afowler"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -20,6 +20,8 @@ ZSH_THEME="robbyrussell"
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
 
+# Fix directory permissions checking
+ZSH_DISABLE_COMPFIX="true"
 # Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
 
@@ -86,6 +88,9 @@ source $ZSH/oh-my-zsh.sh
 source ~/.myrc
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=12"
-#export TERM="xterm-256color"
 
-autoload -U compinit && compinit
+if [[ "$UID" != "0" ]]; then
+	autoload -U compinit && compinit
+fi
+
+export PATH="/home/mnciitbhu/.node_js/bin:$PATH"

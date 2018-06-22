@@ -1,6 +1,6 @@
 [global]
     font = "Droid Sans 10"
-    allow_markup = yes
+    markup = yes
     format = "<b>%s</b>\n%b"
     sort = yes
     indicate_hidden = yes
@@ -25,9 +25,8 @@
     #icon_position = left
     #icon_folders = /usr/share/icons/elementary/actions/16/
 
-[frame]
-    width = 1
-    color = "#383838"
+		frame_width = 1
+		frame_color = "#383838"
 
 [shortcuts]
     close = ctrl+space

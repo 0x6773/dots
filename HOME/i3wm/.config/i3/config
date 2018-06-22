@@ -28,7 +28,8 @@ set $barbackground #00000080
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 font pango:DejaVu Sans Mono 8
 
-for_window [class="^.*"] border pixel 1
+for_window [instance="guake"] floating enable
+for_window [class="URxvt"] floating enable
 
 # General configuration for the borders
 hide_edge_borders both
@@ -217,6 +218,11 @@ bindsym XF86AudioNext exec --no-startup-id mpc next
 bindsym XF86AudioPrev exec --no-startup-id mpc prev
 bindsym Print exec --no-startup-id scrot '%Y-%m-%d-%T_$wx$h_scrot.png' -e 'mv $f ~/Pictures/screenshots/'
 
+# spotify bindings
+bindsym $modWin+XF86AudioPlay exec --no-startup-id playerctl --player=spotify play-pause
+bindsym $modWin+XF86AudioNext exec --no-startup-id playerctl --player=spotify next
+bindsym $modWin+XF86AudioPrev exec --no-startup-id playerctl --player=spotify previous
+
 # bar toggle, hide or show
 bindsym $modWin+m bar mode toggle
 
@@ -243,7 +249,7 @@ assign [class="Spotify"] $workspace4
 # Theme colors
 # class                 border  	background 	text    	indic.   child_border
 client.focused          #00000080 	#00000080 	#964DAC 	#6c71c4
-client.focused_inactive #964DAC80 	#00000080 	#964DAC 	#6c71c4
+client.focused_inactive #00000080 	#00000080 	#8089FF 	#6c71c4
 client.unfocused        #00000080 	#00000080 	#8EC987 	#586e75
 client.urgent           #FF000040 	#FF000040 	#8EC987 	#dc322f
 client.placeholder      #00000080	#0c0c0c80 	#ffffff 	#000000 

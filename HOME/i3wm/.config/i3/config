@@ -86,16 +86,16 @@ bindsym $modWin+q exec lock
 # focus the child container
 #bindsym $modWin+d focus child
 
-set $workspace1 "1 I"
-set $workspace2 "2 II"
-set $workspace3 "3 III"
-set $workspace4 "4 IV"
-set $workspace5 "5 V"
-set $workspace6 "6 VI"
-set $workspace7 "7 VII"
-set $workspace8 "8 VIII"
-set $workspace9 "9 IX"
-set $workspace10 "10 X"
+set $workspace1 "1 W I"
+set $workspace2 "2 W II"
+set $workspace3 "3 W III"
+set $workspace4 "4 W IV"
+set $workspace5 "5 W V"
+set $workspace6 "6 A I"
+set $workspace7 "7 A II"
+set $workspace8 "8 A III"
+set $workspace9 "9 A IV"
+set $workspace10 "10 A V"
 
 
 # switch to workspace
@@ -154,7 +154,6 @@ bindsym $modAlt+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $modAlt+Shift+r restart
 
-# exit i3 (logs you out of your X session)
 bindsym $modWin+Shift+e exec xfce4-session-logout
 
 # resize window (you can also use the mouse for that)
@@ -235,7 +234,7 @@ exec --no-startup-id udiskie --tray &
 exec --no-startup-id variety &
 exec --no-startup-id mpd &
 exec --no-startup-id xcompmgr -c -f -n &
-exec --no-startup-id redshift -l 26.2389:73.0243 -t 6500:3000 &
+exec --no-startup-id redshift -l 26.2389:73.0243 -t 6500:3700 &
 
 bindsym $modAlt+Down exec transset-df --dec 0.05 -a
 bindsym $modAlt+Up exec transset-df --inc 0.05 -a

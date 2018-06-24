@@ -93,4 +93,4 @@ if [[ "$UID" != "0" ]]; then
 	autoload -U compinit && compinit
 fi
 
-export PATH="/home/mnciitbhu/.node_js/bin:$PATH"
+export PATH="/home/mnciitbhu/.anaconda3/bin:/home/mnciitbhu/.node_js/bin:$PATH"

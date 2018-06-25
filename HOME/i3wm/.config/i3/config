@@ -240,10 +240,10 @@ exec --no-startup-id redshift -l 26.2389:73.0243 -t 6500:3700 &
 bindsym $modAlt+Down exec transset-df --dec 0.05 -a
 bindsym $modAlt+Up exec transset-df --inc 0.05 -a
 
-assign [class="Code"] $workspace2
-assign [class="chrome"] $workspace3
-assign [class="Firefox Developer Edition"] $workspace3
-assign [class="Spotify"] $workspace4
+# assign [class="Code"] $workspace2
+# assign [class="chrome"] $workspace3
+# assign [class="Firefox Developer Edition"] $workspace3
+# assign [class="Spotify"] $workspace4
 
 
 # Theme colors

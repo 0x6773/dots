@@ -30,7 +30,7 @@ __CPP=('-Wall' '-Wextra' '-pedantic' '-pthread' '-O0' '-g' '-Wshadow'
 )
 
 # Used in ggcc, gacc and cgcc
-__CC=('-O0' '-g' '-std=c11' '-pedantic' '-Wall' '-Wextra')
+__CC=('-O0' '-g' '-std=c1z' '-pedantic' '-Wall' '-Wextra')
 
 # Used in gg++
 __COMM=('g++' '-std=c++1z' $__CPP)

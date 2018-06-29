@@ -18,3 +18,5 @@
 	insteadOf = aur:
 [url "git@bitbucket.org:"]
 	insteadOf = gb:
+[url "git@gitlab.org:"]
+	insteadOf = gl:

@@ -93,4 +93,4 @@ if [[ "$UID" != "0" ]]; then
 	autoload -U compinit && compinit
 fi
 
-export PATH="/home/mnciitbhu/.node_js/bin:/opt/android-sdk/platform-tools:$PATH:/home/mnciitbhu/.anaconda3/bin"
+export PATH="/bin/vendor_perl:$HOME/.node_js/bin:/opt/android-sdk/platform-tools:$PATH:$HOME/.anaconda3/bin"

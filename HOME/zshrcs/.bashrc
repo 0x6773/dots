@@ -119,3 +119,6 @@ fi
 
 PS1='\[\e]0;\w\a\]\n\[\e[00;33m\][\d \A\[\e[01;35m\]\w\[\e[00;33m\]]\[\e[0m\]\n\$ '
 
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"

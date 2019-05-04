@@ -5,11 +5,10 @@
 [credential]
 	helper = cache --timeout=360000
 [push]
-	default = matching
-[credential "https://github.com"]
-	username = mnciitbhu
+	default = current
 [core]
 	editor = vim
+	pager = most -s
 [commit]
 	gpgsign = true
 [url "git@github.com:"]
@@ -20,3 +19,6 @@
 	insteadOf = gb:
 [url "git@gitlab.com:"]
 	insteadOf = gl:
+
+[includeIf "gitdir:~/work/"]
+	path = ~/.gitconfig-work

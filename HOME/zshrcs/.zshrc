@@ -1,12 +1,15 @@
+alias ls=gls
+
 # Path to your oh-my-zsh installation.
-export ZSH=/home/mnciitbhu/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 
-ZSH_THEME="tjkirch_mod"
+#ZSH_THEME="superjarin"
+ZSH_THEME="spaceship"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -48,14 +51,13 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(sudo archlinux command-not-found \
-				 git aws adb nmap \
-				 emoji iwhois \
-				 zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools)
+plugins=(sudo archlinux brew cp rsync screen vscode \
+				 git adb nmap emoji gradle jira mvn web-search alias-tips zsh-autopair \
+				 zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools history-substring-search)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -93,4 +95,22 @@ if [[ "$UID" != "0" ]]; then
 	autoload -U compinit && compinit
 fi
 
-export PATH="/bin/vendor_perl:$HOME/.node_js/bin:/opt/android-sdk/platform-tools:$PATH:$HOME/.anaconda3/bin"
+export PATH="/anaconda3/bin:$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+#export PATH="$HOME/.anaconda2/bin:$PATH"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+unsetopt correctall
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
+
+export PAGER=less
+#export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}" 
+
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+source /Users/govind.sahai/.rvm/scripts/rvm
+
+#export PATH="/bin/vendor_perl:$HOME/.node_js/bin:/opt/android-sdk/platform-tools:$PATH:$HOME/.anaconda3/bin"
+#export JAVA_HOME=/usr/lib/jvm/default
+

@@ -43,7 +43,7 @@ filetype plugin indent on    " required
 
 " let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.pyc'
 " let g:gruvbox_contrast_dark = "soft"
-colorscheme darkblue
+colorscheme gruvbox
 
 "	Set autoindent
 set autoindent

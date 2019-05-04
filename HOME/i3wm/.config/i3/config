@@ -214,6 +214,9 @@ bindsym $modWin+XF86AudioPlay exec --no-startup-id playerctl --player=spotify pl
 bindsym $modWin+XF86AudioNext exec --no-startup-id playerctl --player=spotify next
 bindsym $modWin+XF86AudioPrev exec --no-startup-id playerctl --player=spotify previous
 
+bindsym $modWin+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo +2% && pkill -RTMIN+1 i3blocks
+bindsym $modWin+XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -2% && pkill -RTMIN+1 i3blocks
+
 # bar toggle, hide or show
 bindsym $modWin+m bar mode toggle
 
@@ -226,7 +229,7 @@ exec --no-startup-id udiskie --tray &
 exec --no-startup-id variety &
 exec --no-startup-id mpd &
 exec --no-startup-id xcompmgr -c -f -n &
-exec --no-startup-id redshift -l 26.2389:73.0243 -t 6500:3700 &
+exec --no-startup-id redshift -l 26.2389:73.0243 -t 6500:5200 &
 # exec --no-startup-id onedive -m & # using systemctl --user enable onedrive
 
 bindsym $modAlt+Down exec transset-df --dec 0.05 -a

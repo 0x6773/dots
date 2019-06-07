@@ -51,7 +51,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(sudo archlinux brew cp rsync screen vscode \
+plugins=(sudo archlinux brew cp rsync screen vscode z \
 				 git adb nmap emoji gradle jira mvn web-search alias-tips zsh-autopair \
 				 zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools history-substring-search)
 
@@ -108,7 +108,7 @@ export PAGER=less
 
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="$PATH:$HOME/.rvm/bin:/Library/TeX/texbin"
 source /Users/govind.sahai/.rvm/scripts/rvm
 
 #export PATH="/bin/vendor_perl:$HOME/.node_js/bin:/opt/android-sdk/platform-tools:$PATH:$HOME/.anaconda3/bin"

@@ -1,3 +1,5 @@
+#! /bin/zsh
+
 export JAVA_HOME=/usr/lib/jvm/default
 export PATH="/usr/lib/hadoop/bin:/bin/vendor_perl:/home/mnciitbhu/.node_js/bin:/opt/android-sdk/platform-tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/mnciitbhu/.anaconda3/bin"
 

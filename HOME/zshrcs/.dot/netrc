@@ -1,76 +1,12 @@
 #! /bin/zsh
 # ~/.dot/.netrc
 
-propro()
-{
-	echo "${green}[ + ] Setting Proxy 127.0.0.1:8118";
-
-	export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com";
-
-	export http_proxy="http://127.0.0.1:8118";
-	export https_proxy=$http_proxy;
-	export ftp_proxy=$http_proxy;
-
-	echo "${blue}Done!";
-}
-
-prof()
-{
-	echo "${green}[ + ] Unsetting all proxies";
-
-	unset http_proxy;
-	unset https_proxy;
-	unset ftp_proxy;
-
-	echo "${blue}Done!";
-}
-
-arpro()
-{
-	for INTF in ap0 wlp1s0 enp3s0; do
-		echo "${red}ARPing $INTF${cyan}";
-		__XX=$(arp -n -i $INTF|grep -v incomplete|tail -n +2|sort -t . -k 3,3n -k 4,4n);
-		__MACR=$(echo $__XX|awk '{print $3}');
-		__IPR=$(echo $__XX|awk '{print $1}');
-		echo $__MACR > ~/.dot/mac.ignore;
-		echo $__IPR > ~/.dot/ip.ignore;
-		python3 ~/.dot/arpro.py ${@};
-	done
-	rm ~/.dot/mac.ignore;
-	rm ~/.dot/ip.ignore;
-}
-
-gpull()
-{
-	curr=$(pwd);
-	for dir in $(find * -maxdepth 0 -type d);
-	do
-		fName=$(basename $dir);
-		cd $fName;
-		if [ $(git branch | sed -n '/\* /s///p') != "master" ]; then
-			echo "${purple}git checkout master";
-			git checkout master;
-		fi
-		for rem in $(git remote); do
-			echo "${yellow}= = > ${blue}git pull ${red}$rem ${blue}master${blue} ${red}in ${lgreen}$fName ${red}@ ${blue}$(git remote show -n $rem |grep Fetch|awk '{print $3}')${NC}";
-			git pull $rem master;
-			echo "";
-		done
-		$curr;
-	done
-}
-
 getmac()
 {
 	curl https://api.macvendors.com/$1;
 }
 
-randmac()
-{
-	hexdump -n3 -e'/3 "00:69:69" 3/1 ":%02X"' /dev/random	
-}
-
-setroute()
+is_mac && setroute()
 {
 	declare -a addrs=(10.0.0.0/8 172.16.0.0/12 192.168.0.0/16)
 	gw=$(route -n get default|ggrep -Po "(?<=gateway: ).*")
@@ -137,8 +73,7 @@ addhost() {
 	}
 
 	local url=${1}
-	url=${url#"http://"}
-	url=${url#"https://"}
+	url=$(echo ${url} | awk -F/ '{print $3}' | awk -F: '{print $1}')
 	local hostFile="/etc/hosts"
 	
 	echo "URL: ${url}"

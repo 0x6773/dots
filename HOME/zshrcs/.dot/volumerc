@@ -19,10 +19,9 @@ man() {
 		LESS_TERMCAP_us=$(printf "\e[1;32m") \
 		man "$@"
 }
-export PAGER="/usr/bin/most -s"
 
 # Set volume from command line
-volm()
+is_linux && is_fullsystem && volm()
 {
 	if [ $# -lt 1 ]; then
 		echo "$0 <value>";
@@ -45,7 +44,7 @@ volm()
 	fi
 }
 
-volc()
+is_linux && is_fullsystem && volc()
 {
 	if [ $# -lt 1 ]; then
 		echo "$0 <value>"
@@ -75,7 +74,7 @@ volc()
 	fi
 }
 
-voldance()
+is_linux && is_fullsystem && voldance()
 {
 	if [ $# -lt 1 ]; then
 		echo "$0 <value>"

@@ -1,11 +1,5 @@
 #! /bin/zsh
 
-###
- #
-# All zsh options here
- #
-###
-
 HISTSIZE=30000
 SAVEHIST=30000
 

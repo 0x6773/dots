@@ -1,4 +1,5 @@
-alias ls=gls
+
+source $HOME/.dot/prezshrc
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -8,8 +9,11 @@ export ZSH=$HOME/.oh-my-zsh
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 
-#ZSH_THEME="superjarin"
-ZSH_THEME="spaceship"
+if is_mac; then
+	ZSH_THEME="spaceship"
+else 
+	ZSH_THEME="superjarin"
+fi
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -51,9 +55,14 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(sudo archlinux brew cp rsync screen vscode z \
-				 git adb nmap emoji gradle jira mvn web-search alias-tips zsh-autopair \
-				 zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools history-substring-search)
+
+plugins=(git alias-tips zsh-autopair zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools history-substring-search)
+
+is_fullsystem && plugins=(${plugins[@]} sudo cp rsync screen vscode z adb nmap emoji jira web-search)
+
+is_archlinux && plugins=(${plugins[@]} archlinux)
+
+has_java && is_fullsystem && plugins=(${plugins[@]} gradle mvn)
 
 # User configuration
 
@@ -63,7 +72,8 @@ export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:
 source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -95,22 +105,19 @@ if [[ "$UID" != "0" ]]; then
 	autoload -U compinit && compinit
 fi
 
-export PATH="/anaconda3/bin:$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-#export PATH="$HOME/.anaconda2/bin:$PATH"
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
 unsetopt correctall
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
 
-export PAGER=less
-#export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}" 
+if is_mac; then
+	export PATH="/anaconda3/bin:$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+	export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
+	export PAGER=less
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin:/Library/TeX/texbin"
-source /Users/govind.sahai/.rvm/scripts/rvm
+	export PATH="$PATH:$HOME/.rvm/bin:/Library/TeX/texbin:/Users/govind.sahai/.cargo/bin"
+	source /Users/govind.sahai/.rvm/scripts/rvm
+fi
 
-#export PATH="/bin/vendor_perl:$HOME/.node_js/bin:/opt/android-sdk/platform-tools:$PATH:$HOME/.anaconda3/bin"
-#export JAVA_HOME=/usr/lib/jvm/default
-
+if is_on_path thefuck; then
+	eval $(thefuck --alias)
+fi

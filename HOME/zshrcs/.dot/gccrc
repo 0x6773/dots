@@ -1,11 +1,4 @@
 #! /bin/zsh
-# ~/.dot/.gccrc
-
-#
-
-# For use with GCC(g++ or gcc) & clang
-
-#
 
 g+c()
 {

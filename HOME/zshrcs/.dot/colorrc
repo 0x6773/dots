@@ -1,11 +1,4 @@
 #! /bin/zsh
-# ~/.dot/.colorrc
-
-#
-
-# Color Codes
-
-#
 
 #Standard Colors
 red='\033[0;31m'

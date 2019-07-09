@@ -1,0 +1,37 @@
+#! /bin/zsh
+# prezshrc
+
+MACHINE_OS=$(uname)
+
+is_mac() {
+    [ "${MACHINE_OS}" = "Darwin" ]
+}
+
+is_linux() {
+    [ "${MACHINE_OS}" = "Linux" ]
+}
+
+is_docker() {
+    # https://stackoverflow.com/a/25518538/3789604
+    [ -f /.dockerenv ]
+}
+
+is_archlinux() {
+    # https://bbs.archlinux.org/viewtopic.php?id=82449
+    [ -f "/etc/arch-release" ]
+}
+
+is_fullsystem() {
+    ! is_docker
+}
+
+is_on_path() {
+    local CMD=${1}
+    command -v ${CMD} &> /dev/null
+}
+
+
+has_java() {
+    is_on_path java
+}
+

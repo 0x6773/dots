@@ -1,53 +1,35 @@
 #! /bin/zsh
-#	~/.myrc
 
-source ~/.dot/.aliasrc
+source ~/.dot/aliasrc
 
-source ~/.dot/.zshoptrc
+source ~/.dot/zshoptrc
 
-source ~/.dot/.colorrc
+source ~/.dot/colorrc
 
-source ~/.dot/.gccrc
+source ~/.dot/gccrc
 
-source ~/.dot/.aliasrc
+source ~/.dot/aliasrc
 
-source ~/.dot/.netrc
+source ~/.dot/netrc
 
-source ~/.dot/.volumerc
+source ~/.dot/volumerc
 
-source ~/.dot/.javarc
-
-#Alt-S inserts "sudo " at the start of line:
-insert_sudo ()
-{
-  zle beginning-of-line;
-  zle -U "sudo "
-}
-zle -N insert-sudo insert_sudo
-bindkey "^[s" insert-sudo
-
-#Alt-M insert "man " at start of line
-insert_man ()
-{
-  zle beginning-of-line;
-  zle -U "man "
-}
-zle -N insert-man insert_man
-bindkey "^[m" insert-man
+# source ~/.dot/javarc
 
 unset SSH_ASKPASS
 
-eval $(gdircolors -b ~/.dot/LS_COLORS)
+is_mac && eval $(gdircolors -b ~/.dot/LS_COLORS)
 
-function swap()         
+swap()         
 {
   local TMPFILE=tmp.$$;
-	mv "$1" $TMPFILE && mv "$2" "$1" && mv $TMPFILE $2;
+	mv "${1}" $TMPFILE && mv "${2}" "${1}" && mv "${TMPFILE}" "${2}";
 }
 
-alias l="gls -lahG --color"
-alias ls="gls -G --color"
-alias ll="gls -lhG --color"
-
+if is_mac; then
+  alias l="gls -lahG --color"
+  alias ls="gls -G --color"
+  alias ll="gls -lhG --color"
+fi
 
 

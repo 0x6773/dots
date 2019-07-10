@@ -1,10 +1,4 @@
-#! /usr/bin/zsh
-
-#
-
-# Things specific to fedora are here
-
-#
+#! /usr/bin/env zsh
 
 # for coloured-man
 unalias man

@@ -1,5 +1,4 @@
-#! /bin/zsh
-# ~/.dot/.netrc
+#! /usr/bin/env zsh
 
 getmac()
 {

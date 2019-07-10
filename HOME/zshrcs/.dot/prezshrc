@@ -1,5 +1,4 @@
-#! /bin/zsh
-# prezshrc
+#! /usr/bin/env zsh
 
 MACHINE_OS=$(uname)
 

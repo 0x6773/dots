@@ -1,6 +1,12 @@
 
 source $HOME/.dot/prezshrc
 
+if is_docker; then
+	HISTFILE="${HOME}/.zsh_history_docker"
+else
+	HISTFILE="${HOME}/.zsh_history"
+fi
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -61,6 +67,8 @@ plugins=(git alias-tips zsh-autopair zsh-syntax-highlighting zsh-autosuggestions
 is_fullsystem && plugins=(${plugins[@]} sudo cp rsync screen vscode z adb nmap emoji jira web-search)
 
 is_archlinux && plugins=(${plugins[@]} archlinux)
+
+is_mac && plugins=(${plugins[@]} brew)
 
 has_java && is_fullsystem && plugins=(${plugins[@]} gradle mvn)
 

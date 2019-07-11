@@ -34,3 +34,6 @@ has_java() {
     is_on_path java
 }
 
+has_docker() {
+    is_on_path docker
+}

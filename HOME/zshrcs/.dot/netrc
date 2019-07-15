@@ -24,7 +24,7 @@ is_mac && setroute()
 	done
 }
 
-addhost() {
+is_flipkart_mac && addhost() {
 	gethostfromdns() {
 		local url=${1}
 		local dns="172.27.54.61"
@@ -72,6 +72,9 @@ addhost() {
 	}
 
 	local url=${1}
+
+	[ "${url}" = "" ] && echo "Usage: ${0} {URL}" && return 0
+
 	url=$(echo ${url} | awk -F/ '{print $3}' | awk -F: '{print $1}')
 	local hostFile="/etc/hosts"
 	
@@ -124,5 +127,10 @@ has_docker && archdocker() {
 	fi
 	echo "Attaching to container..."
 	docker attach ${CONTAINER}
+}
+
+is_flipkart_mac && copytoken() {
+	stoken --file=${HOME}/.ssh/secureid.sdtid | tr -d '\n' | pbcopy
+	echo "Token Copied: $(pbpaste)"
 }
 

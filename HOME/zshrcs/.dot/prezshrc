@@ -37,3 +37,7 @@ has_java() {
 has_docker() {
     is_on_path docker
 }
+
+is_flipkart_mac() {
+    [ "$(hostname -s)" = "g0vinds-LaP" ]
+}

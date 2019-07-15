@@ -64,7 +64,7 @@ COMPLETION_WAITING_DOTS="true"
 
 plugins=(git alias-tips zsh-autopair zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools history-substring-search)
 
-is_fullsystem && plugins=(${plugins[@]} sudo cp rsync screen vscode z adb nmap emoji jira web-search)
+is_fullsystem && plugins=(${plugins[@]} sudo cp rsync screen vscode z adb nmap emoji jira web-search jsontools)
 
 is_archlinux && plugins=(${plugins[@]} archlinux)
 
@@ -126,6 +126,5 @@ if is_mac; then
 	source /Users/govind.sahai/.rvm/scripts/rvm
 fi
 
-if is_on_path thefuck; then
-	eval $(thefuck --alias)
-fi
+is_on_path thefuck && eval $(thefuck --alias)
+is_on_path direnv && eval "$(direnv hook zsh)"

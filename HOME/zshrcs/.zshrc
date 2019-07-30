@@ -68,7 +68,7 @@ is_fullsystem && plugins=(${plugins[@]} sudo cp rsync screen vscode z adb nmap e
 
 is_archlinux && plugins=(${plugins[@]} archlinux)
 
-is_mac && plugins=(${plugins[@]} brew)
+is_mac && plugins=(${plugins[@]} brew auto-notify)
 
 has_java && is_fullsystem && plugins=(${plugins[@]} gradle mvn)
 
@@ -128,3 +128,21 @@ fi
 
 is_on_path thefuck && eval $(thefuck --alias)
 is_on_path direnv && eval "$(direnv hook zsh)"
+
+if is_mac; then
+	# >>> conda initialize >>>
+	# !! Contents within this block are managed by 'conda init' !!
+	__conda_setup="$('/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+	if [ $? -eq 0 ]; then
+			eval "$__conda_setup"
+	else
+			if [ -f "/anaconda3/etc/profile.d/conda.sh" ]; then
+					source "/anaconda3/etc/profile.d/conda.sh"
+			else
+					export PATH="/anaconda3/bin:$PATH"
+			fi
+	fi
+	unset __conda_setup
+	# <<< conda initialize <<<
+fi
+

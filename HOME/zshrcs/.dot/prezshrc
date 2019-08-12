@@ -37,5 +37,5 @@ has_docker() {
 }
 
 is_flipkart_mac() {
-    is_mac && [ "$(hostname -s)" = "g0vinds-LaP-d03f" ]
+    is_mac && [[ $(hostname -s) =~ "g0vinds-LaP" ]]
 }

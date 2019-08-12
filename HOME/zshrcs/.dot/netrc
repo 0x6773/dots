@@ -130,7 +130,7 @@ has_docker && archdocker() {
 }
 
 is_flipkart_mac && copytoken() {
-	while [ 0 ]; do
+	while do
 		stoken --file=${HOME}/.ssh/secureid.sdtid | tr -d '\n' | pbcopy;
 		echo -n "\rToken Copied: $(pbpaste), Remaining: $((60 - $(date +%S))) seconds";
 		sleep 1;

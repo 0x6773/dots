@@ -3,7 +3,9 @@
 alias .='cd ..'
 alias cc='cd ~/Codes/CPP/'
 alias v='vim'
-alias sl="ls"
+alias sl='ls'
+alias ..='cd ..;cd ..'
+alias ..g='cd $(git rev-parse --show-toplevel)'
 
 #copy
 cz() {

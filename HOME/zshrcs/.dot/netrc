@@ -75,10 +75,10 @@ is_flipkart_mac && addhost() {
 
 	[ "${url}" = "" ] && echo "Usage: ${0} {URL}" && return 0
 
-	url=$(echo ${url} | awk -F/ '{print $3}' | awk -F: '{print $1}')
+	[[ ${url} =~ ":\/\/" ]] && url=$(echo ${url} | awk -F/ '{print $3}' | awk -F: '{print $1}')
 	local hostFile="/etc/hosts"
 	
-	echo "URL: ${url}"
+	echo "URL: '${url}'"
 
 	if [[ "${2}" = "-r" ]]; then
 		removefromhost ${hostFile} ${url}
@@ -96,7 +96,7 @@ is_flipkart_mac && addhost() {
 
 	if [[ ${ip1} != "" ]] && [[ ${ip2} != "" ]]; then
 		if [[ ${ip1} != ${ip2} ]]; then
-			echo "Corner case. Found in both ways and are not equal. Please implement this";
+			echo "[!] Corner case. Found in both ways and are not equal. Please implement this";
 			return
 		fi
 		local ip=${ip1}

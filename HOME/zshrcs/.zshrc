@@ -1,4 +1,4 @@
-
+# set -xv # for debug slowness
 source $HOME/.dot/prezshrc
 
 if is_docker; then

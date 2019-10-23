@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+source ~/.dot/gpgrc
+
 source ~/.dot/aliasrc
 
 source ~/.dot/zshoptrc
@@ -15,6 +17,8 @@ source ~/.dot/netrc
 source ~/.dot/volumerc
 
 # source ~/.dot/javarc
+
+source ~/.dot/xtrasrc
 
 unset SSH_ASKPASS
 

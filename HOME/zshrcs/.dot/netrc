@@ -116,7 +116,8 @@ is_flipkart_mac && addhost() {
 }
 
 has_docker && archdocker() {
-	local CONTAINER="archdocker"
+	local CONTAINER="${1}"
+	[ "${CONTAINER}" = "" ] && CONTAINER="archdocker" 
 	if [ ! "$(docker ps -a | grep ${CONTAINER})" ]; then
 		echo "Creating new container in detached mode..."
 		docker run -dit -d -v $HOME:/root --name ${CONTAINER} arch:0.1
@@ -130,9 +131,13 @@ has_docker && archdocker() {
 }
 
 is_flipkart_mac && copytoken() {
+	local start=$(date +%s)
 	while do
-		stoken --file=${HOME}/.ssh/secureid.sdtid | tr -d '\n' | pbcopy;
-		echo -n "\rToken Copied: $(pbpaste), Remaining: $((60 - $(date +%S))) seconds";
+		local pulse_code=$(get_pulse_code)
+		local now=$(date +%s)
+		[ $((${now} - ${start})) -gt 30 ] && echo "\rExiting * * * * * * * * * * * * * * * * * * * * * * * * * " && break
+		stoken --file=${HOME}/.ssh/secureid.sdtid | tr -d '\n' | sed -e "s/^/${pulse_code}/g" | pbcopy;
+		echo -n "\rToken Copied: $(pbpaste | sed -e "s/^${pulse_code}/****/g"), Remaining: $((60 - $(date +%S))) seconds";
 		sleep 1;
 	done
 }

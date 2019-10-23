@@ -27,7 +27,6 @@ is_on_path() {
     command -v ${CMD} &> /dev/null
 }
 
-
 has_java() {
     is_on_path java
 }
@@ -39,3 +38,4 @@ has_docker() {
 is_flipkart_mac() {
     is_mac && [[ $(hostname -s) =~ "g0vinds-LaP" ]]
 }
+

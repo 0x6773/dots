@@ -26,7 +26,7 @@ __CPP=('-Wall' '-Wextra' '-pedantic' '-pthread' '-O0' '-g' '-Wshadow'
 __CC=('-O0' '-g' '-std=c17' '-pedantic' '-Wall' '-Wextra')
 
 # Used in gg++
-__COMM=('g++' '-std=c++17' $__CPP)
+__COMM=('g++' '-std=c++2a' $__CPP)
 
 #gcc function
 gg++()

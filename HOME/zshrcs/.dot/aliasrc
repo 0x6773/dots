@@ -6,6 +6,7 @@ alias v='vim'
 alias sl='ls'
 alias ..='cd ..;cd ..'
 alias ..g='cd $(git rev-parse --show-toplevel)'
+alias ssh="/usr/local/bin/ssh -oStrictHostKeyChecking=no"
 
 alias sudo='sudo '
 

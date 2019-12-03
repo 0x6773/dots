@@ -1,4 +1,5 @@
 # set -xv # for debug slowness
+
 source $HOME/.dot/prezshrc
 
 if is_docker; then
@@ -130,19 +131,9 @@ is_on_path thefuck && eval $(thefuck --alias)
 is_on_path direnv && eval "$(direnv hook zsh)"
 
 if is_mac; then
-	# >>> conda initialize >>>
-	# !! Contents within this block are managed by 'conda init' !!
-	__conda_setup="$('/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-	if [ $? -eq 0 ]; then
-			eval "$__conda_setup"
+	if [ -f "/anaconda3/etc/profile.d/conda.sh" ]; then
+		source "/anaconda3/etc/profile.d/conda.sh"
 	else
-			if [ -f "/anaconda3/etc/profile.d/conda.sh" ]; then
-					source "/anaconda3/etc/profile.d/conda.sh"
-			else
-					export PATH="/anaconda3/bin:$PATH"
-			fi
+		export PATH="/anaconda3/bin:$PATH"
 	fi
-	unset __conda_setup
-	# <<< conda initialize <<<
 fi
-

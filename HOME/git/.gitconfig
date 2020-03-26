@@ -22,3 +22,5 @@
 
 [includeIf "gitdir:~/work/"]
 	path = ~/.gitconfig-work
+[merge]
+	tool = meld

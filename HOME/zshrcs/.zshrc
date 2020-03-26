@@ -63,7 +63,7 @@ COMPLETION_WAITING_DOTS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-plugins=(git alias-tips zsh-autopair zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools history-substring-search)
+plugins=(git alias-tips zsh-autopair zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools history-substring-search fast-syntax-highlighting)
 
 is_fullsystem && plugins=(${plugins[@]} sudo cp rsync screen vscode z adb nmap emoji jira web-search jsontools)
 

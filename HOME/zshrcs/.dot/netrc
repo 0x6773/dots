@@ -19,6 +19,9 @@ is_mac && setroute()
 			setroute delete
 			setroute add
 			return 0
+		else
+			eval "${cmd}"
+			break
 		fi
 		eval "${cmd}"
 	done
@@ -136,9 +139,18 @@ is_flipkart_mac && copytoken() {
 		local pulse_code=$(get_pulse_code)
 		local now=$(date +%s)
 		[ $((${now} - ${start})) -gt 30 ] && echo "\rExiting * * * * * * * * * * * * * * * * * * * * * * * * * " && break
-		stoken --file=${HOME}/.ssh/secureid.sdtid | tr -d '\n' | sed -e "s/^/${pulse_code}/g" | pbcopy;
+		stoken --file=${HOME}/.ssh/secureid.sdtid | sed -e "s/^/${pulse_code}/g" | tr -d '\n' | pbcopy;
 		echo -n "\rToken Copied: $(pbpaste | sed -e "s/^${pulse_code}/****/g"), Remaining: $((60 - $(date +%S))) seconds";
 		sleep 1;
 	done
 }
 
+lssh() {
+	local HOST=${1}
+	echo "While loop over ssh: ${HOST}"
+	ssh ${HOST}
+	while [ $? -ne 0 ]; do 
+		sleep 1s; 
+		ssh ${HOST}; 
+	done
+}

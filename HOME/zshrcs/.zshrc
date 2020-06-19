@@ -124,7 +124,7 @@ if is_mac; then
 	export PAGER=less
 
 	export PATH="$PATH:$HOME/.rvm/bin:/Library/TeX/texbin:/Users/govind.sahai/.cargo/bin"
-	source /Users/govind.sahai/.rvm/scripts/rvm
+	# source /Users/govind.sahai/.rvm/scripts/rvm
 fi
 
 is_on_path thefuck && eval $(thefuck --alias)

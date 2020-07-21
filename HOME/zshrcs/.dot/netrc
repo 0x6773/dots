@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+is_wsl && export GPG_TTY=$(tty)
+
 getmac()
 {
 	curl https://api.macvendors.com/$1;

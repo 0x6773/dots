@@ -1,7 +1,5 @@
 #! /usr/bin/env zsh
 
-source ~/.dot/gpgrc
-
 source ~/.dot/aliasrc
 
 source ~/.dot/zshoptrc
@@ -10,19 +8,15 @@ source ~/.dot/colorrc
 
 source ~/.dot/gccrc
 
-source ~/.dot/aliasrc
-
 source ~/.dot/netrc
-
-source ~/.dot/volumerc
-
-# source ~/.dot/javarc
-
-source ~/.dot/xtrasrc
 
 unset SSH_ASKPASS
 
-is_mac && eval $(gdircolors -b ~/.dot/LS_COLORS)
+if is_mac; then 
+  eval $(gdircolors -b ~/.dot/LS_COLORS)
+else
+  eval $(dircolors -b ~/.dot/LS_COLORS)
+fi
 
 swap()         
 {
@@ -30,10 +24,4 @@ swap()
 	mv "${1}" $TMPFILE && mv "${2}" "${1}" && mv "${TMPFILE}" "${2}";
 }
 
-if is_mac; then
-  alias l="gls -lahG --color"
-  alias ls="gls -G --color"
-  alias ll="gls -lhG --color"
-fi
-
-
+is_wsl && cd

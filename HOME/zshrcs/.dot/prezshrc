@@ -19,7 +19,7 @@ is_archlinux() {
 }
 
 is_fullsystem() {
-    ! is_docker
+    ! is_docker && ! is_wsl
 }
 
 is_on_path() {
@@ -39,3 +39,10 @@ is_flipkart_mac() {
 	is_mac && [[ $(hostname -s) =~ "g0vinds-LaP" ]] || [[ $(hostname) =~ "flipkart" ]]
 }
 
+is_wsl() {
+    grep -qEi "microsoft" /proc/version    
+}
+
+is_ubuntu() {
+    grep -iEq 'ubuntu' /etc/issue
+}

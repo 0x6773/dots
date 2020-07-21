@@ -5,119 +5,6 @@ getmac()
 	curl https://api.macvendors.com/$1;
 }
 
-is_mac && setroute()
-{
-	declare -a addrs=(10.0.0.0/8 172.16.0.0/12 192.168.0.0/16)
-	gw=$(route -n get default|ggrep -Po "(?<=gateway: ).*")
-	local cmd="echo \"Looks like we need to learn use route\""
-	for addr in "${addrs[@]}"; do
-		if [[ "${1}" = "add" ]]; then
-			cmd="sudo route -n ${1} -net ${addr} ${gw}";
-		elif [[ "${1}" = "delete" ]]; then
-			cmd="sudo route -n ${1} -net ${addr}";
-		elif [[ "${1}" = "re" ]]; then
-			setroute delete
-			setroute add
-			return 0
-		else
-			eval "${cmd}"
-			break
-		fi
-		eval "${cmd}"
-	done
-}
-
-is_flipkart_mac && addhost() {
-	gethostfromdns() {
-		local url=${1}
-		local dns="172.27.54.61"
-		echo "Using DNS: ${dns}" >&2
-		local cmd="dig +short ${url} @${dns}"
-		echo "Running: ${cmd}" >&2
-		local ip=$(eval ${cmd})
-		echo ${ip}
-	}
-
-	gethostfromazkexecutor() {
-		local url=${1}
-		local azk="10.33.82.148"
-		local sshuser="adqops"
-		echo "Using azk Server: ${azk}" >&2
-		local cmd="ssh -i ~/.ssh/${sshuser}.rsa ${sshuser}@${azk} \"cat /etc/hosts|grep -Po \\\"[\d\.]*(?= ${url//\./\\.}$)\\\"\""
-		echo "Running: ${cmd}" >&2
-		local ip=$(eval ${cmd})
-		echo ${ip}
-	}
-
-	isalreadypresent() {
-		local hostFile=${1}
-		local url=${2}
-		local cmd="cat ${hostFile} | grep \" ${url//\./\\.}$\""
-		echo "Checking if already present" >&2
-		echo "Running ${cmd}" >&2
-		local ip=$(eval ${cmd})
-		if [[ ${ip} = "" ]]; then 
-			echo "0"
-		else
-			echo "IP: ${ip}">&2
-			echo "1"
-		fi
-	}
-
-	removefromhost() {
-		local hostFile=${1}
-		local url=${2}
-		local cmd="cat ${hostFile} | grep -v \" ${url//\./\\.}$\""
-		echo "Running ${cmd}" >&2
-		echo "Removing ${url} from ${hostFile} if present" >&2
-		local entries=$(eval ${cmd})
-		sudo sh -c "echo -n \"${entries}\" > ${hostFile}"
-	}
-
-	local url=${1}
-
-	[ "${url}" = "" ] && echo "Usage: ${0} {URL}" && return 0
-
-	[[ ${url} =~ ":\/\/" ]] && url=$(echo ${url} | awk -F/ '{print $3}' | awk -F: '{print $1}')
-	local hostFile="/etc/hosts"
-	
-	echo "URL: '${url}'"
-
-	if [[ "${2}" = "-r" ]]; then
-		removefromhost ${hostFile} ${url}
-	fi
-
-	if [[ $(isalreadypresent ${hostFile} ${url}) -ne 0 ]]; then
-		echo "This host already present"
-		return
-	else
-		echo "Not present :). Lets scan both dns and azk server"
-	fi
-	
-	ip1=$(gethostfromdns ${url})
-	ip2=$(gethostfromazkexecutor ${url})
-
-	if [[ ${ip1} != "" ]] && [[ ${ip2} != "" ]]; then
-		if [[ ${ip1} != ${ip2} ]]; then
-			echo "[!] Corner case. Found in both ways and are not equal. Please implement this";
-			return
-		fi
-		local ip=${ip1}
-	elif [[ ${ip1} != "" ]]; then
-		echo "Found using DNS"
-		local ip=${ip1}
-	elif [[ ${ip2} != "" ]]; then
-		echo "Found using azk server"
-		local ip=${ip2}
-	fi
-	if [[ "${ip}" = "" ]]; then
-		echo "No IP Address Found! Add to ${hostFile} manually!"
-	else
-		echo "IP Addr Found: ${ip}"
-		sudo sh -c "echo \"${ip} ${url}\" >> ${hostFile}"
-	fi
-}
-
 has_docker && archdocker() {
 	local CONTAINER="${1}"
 	[ "${CONTAINER}" = "" ] && CONTAINER="archdocker" 
@@ -131,18 +18,6 @@ has_docker && archdocker() {
 	fi
 	echo "Attaching to container..."
 	docker attach ${CONTAINER}
-}
-
-is_flipkart_mac && copytoken() {
-	local start=$(date +%s)
-	while do
-		local pulse_code=$(get_pulse_code)
-		local now=$(date +%s)
-		[ $((${now} - ${start})) -gt 30 ] && echo "\rExiting * * * * * * * * * * * * * * * * * * * * * * * * * " && break
-		stoken --file=${HOME}/.ssh/secureid.sdtid | sed -e "s/^/${pulse_code}/g" | tr -d '\n' | pbcopy;
-		echo -n "\rToken Copied: $(pbpaste | sed -e "s/^${pulse_code}/****/g"), Remaining: $((60 - $(date +%S))) seconds";
-		sleep 1;
-	done
 }
 
 lssh() {

@@ -18,7 +18,9 @@ export ZSH=$HOME/.oh-my-zsh
 
 if is_mac; then
 	ZSH_THEME="spaceship"
-else 
+elif is_wsl; then
+	ZSH_THEME="afowler"
+else
 	ZSH_THEME="superjarin"
 fi
 
@@ -65,9 +67,13 @@ COMPLETION_WAITING_DOTS="true"
 
 plugins=(git alias-tips zsh-autopair zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-navigation-tools history-substring-search fast-syntax-highlighting)
 
-is_fullsystem && plugins=(${plugins[@]} sudo cp rsync screen vscode z adb nmap emoji jira web-search jsontools)
+is_wsl || is_fullsystem && plugins=(${plugins[@]} sudo cp rsync z colored-man-pages)
+
+is_fullsystem && plugins=(${plugins[@]} screen vscode adb nmap)
 
 is_archlinux && plugins=(${plugins[@]} archlinux)
+
+is_ubuntu && plugins=(${plugins[@]} ubuntu)
 
 is_mac && plugins=(${plugins[@]} brew auto-notify)
 
@@ -75,7 +81,6 @@ has_java && is_fullsystem && plugins=(${plugins[@]} gradle mvn)
 
 # User configuration
 
-export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -110,10 +115,6 @@ source ~/.myrc
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=12"
 
-if [[ "$UID" != "0" ]]; then
-	autoload -U compinit && compinit
-fi
-
 unsetopt correctall
 
 if is_mac; then
@@ -122,18 +123,4 @@ if is_mac; then
 
 	export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
 	export PAGER=less
-
-	export PATH="$PATH:$HOME/.rvm/bin:/Library/TeX/texbin:/Users/govind.sahai/.cargo/bin"
-	# source /Users/govind.sahai/.rvm/scripts/rvm
-fi
-
-is_on_path thefuck && eval $(thefuck --alias)
-is_on_path direnv && eval "$(direnv hook zsh)"
-
-if is_mac; then
-	if [ -f "/anaconda3/etc/profile.d/conda.sh" ]; then
-		source "/anaconda3/etc/profile.d/conda.sh"
-	else
-		export PATH="/anaconda3/bin:$PATH"
-	fi
 fi

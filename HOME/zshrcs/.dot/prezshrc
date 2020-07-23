@@ -40,9 +40,9 @@ is_flipkart_mac() {
 }
 
 is_wsl() {
-    grep -qEi "microsoft" /proc/version    
+    is_linux && grep -qEi "microsoft" /proc/version    
 }
 
 is_ubuntu() {
-    grep -iEq 'ubuntu' /etc/issue
+    is_linux && grep -iEq 'ubuntu' /etc/issue
 }

@@ -17,7 +17,7 @@ export ZSH=$HOME/.oh-my-zsh
 # time that oh-my-zsh is loaded.
 
 if is_mac; then
-	ZSH_THEME="spaceship"
+	ZSH_THEME="af-magic"
 elif is_wsl; then
 	ZSH_THEME="afowler"
 else
@@ -124,3 +124,19 @@ if is_mac; then
 	export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
 	export PAGER=less
 fi
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/govindsahai/.anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/govindsahai/.anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/govindsahai/.anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/govindsahai/.anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+

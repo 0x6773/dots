@@ -339,3 +339,5 @@ endfunction
 
 "Remove all trailing whitespace by pressing F5
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
+let g:ycm_server_keep_logfiles = 1 
+let g:ycm_server_log_level = 'debug'

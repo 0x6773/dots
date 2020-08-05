@@ -117,6 +117,8 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=12"
 
 unsetopt correctall
 
+is_on_path go && export PATH="${PATH}:${HOME}/go/bin"
+
 if is_mac; then
 	export PATH="/anaconda3/bin:$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

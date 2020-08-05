@@ -20,7 +20,9 @@
 [url "git@gitlab.com:"]
 	insteadOf = gl:
 
-[includeIf "gitdir:~/work/"]
+[includeIf "gitdir:~/Work/"]
+	path = ~/.gitconfig-work
+[includeIf "gitdir:~/go/src/github.com/dunzoit/"]
 	path = ~/.gitconfig-work
 [merge]
 	tool = meld

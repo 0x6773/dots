@@ -26,3 +26,5 @@
 	path = ~/.gitconfig-work
 [merge]
 	tool = meld
+[pull]
+	ff = only

@@ -10,7 +10,7 @@
 	editor = vim
 	pager = most -s
 [commit]
-	gpgsign = true
+	gpgsign = false
 [url "git@github.com:"]
 	insteadOf = gh:
 [url "https://aur.archlinux.org/"]
@@ -28,3 +28,13 @@
 	tool = meld
 [pull]
 	ff = only
+	default = current
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[gpg]
+	program = gpg
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/

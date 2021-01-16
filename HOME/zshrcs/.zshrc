@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # set -xv # for debug slowness
 
 source $HOME/.dot/prezshrc
@@ -17,7 +24,8 @@ export ZSH=$HOME/.oh-my-zsh
 # time that oh-my-zsh is loaded.
 
 if is_mac; then
-	ZSH_THEME="af-magic"
+	#ZSH_THEME="af-magic"
+	ZSH_THEME="powerlevel10k/powerlevel10k"
 elif is_wsl; then
 	ZSH_THEME="afowler"
 else
@@ -75,7 +83,7 @@ is_archlinux && plugins=(${plugins[@]} archlinux)
 
 is_ubuntu && plugins=(${plugins[@]} ubuntu)
 
-is_mac && plugins=(${plugins[@]} brew auto-notify)
+is_mac && plugins=(${plugins[@]} brew auto-notify golang)
 
 has_java && is_fullsystem && plugins=(${plugins[@]} gradle mvn)
 
@@ -123,7 +131,7 @@ if is_mac; then
 	export PATH="/anaconda3/bin:$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-	export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
+	export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-8.jdk/Contents/Home
 	export PAGER=less
 fi
 
@@ -142,3 +150,5 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

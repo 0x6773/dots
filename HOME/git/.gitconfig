@@ -20,7 +20,7 @@
 [url "git@gitlab.com:"]
 	insteadOf = gl:
 
-[includeIf "gitdir:~/Work/"]
+[includeIf "gitdir:~/work/"]
 	path = ~/.gitconfig-work
 [includeIf "gitdir:~/go/src/github.com/dunzoit/"]
 	path = ~/.gitconfig-work

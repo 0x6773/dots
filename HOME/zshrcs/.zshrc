@@ -154,4 +154,4 @@ unset __conda_setup
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 source /Users/govindsahai/go/src/github.com/dunzoit/pubsub/src/zsource.sh
-
+export SLACK_URL="https://hooks.slack.com/workflows/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"

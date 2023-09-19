@@ -1,0 +1,24 @@
+[user]
+	name = Govind Sahai
+	email = gosahai@amazon.com
+
+[url "ssh://gosahai@gerrit-mirror.ereader.amazon.dev:9418/"]
+    insteadOf = git://gerrit.ereader.amazon.dev/
+    insteadOf = https://gerrit.ereader.amazon.dev/
+    insteadOf = http://gerrit.ereader.amazon.dev/
+    insteadOf = ssh://gerrit.ereader.amazon.dev:9418/
+    insteadOf = ssh://gerrit.ereader.amazon.dev/
+    insteadOf = ssh://gosahai@gerrit.ereader.amazon.dev:9418/
+
+[url "ssh://gosahai@gerrit.ereader.amazon.dev:9418/"]
+    pushInsteadOf = git://gerrit-mirror.ereader.amazon.dev/
+    pushInsteadOf = ssh://gerrit-mirror.ereader.amazon.dev:9418/
+    pushInsteadOf = ssh://gosahai@gerrit-mirror.ereader.amazon.dev:9418/
+    pushInsteadOf = git://gerrit.ereader.amazon.dev/
+    pushInsteadOf = http://gerrit.ereader.amazon.dev/
+    pushInsteadOf = https://gerrit.ereader.amazon.dev/
+    pushInsteadOf = ssh://gerrit.ereader.amazon.dev:9418/
+    pushInsteadOf = ssh://gerrit.ereader.amazon.dev/
+    pushInsteadOf = ssh://gosahai@gerrit.ereader.amazon.dev:9418/
+[color]
+	ui = auto

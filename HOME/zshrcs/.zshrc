@@ -153,5 +153,12 @@ unset __conda_setup
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-source /Users/govindsahai/go/src/github.com/dunzoit/pubsub/src/zsource.sh
-export SLACK_URL="https://hooks.slack.com/workflows/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"
+# source /Users/govindsahai/go/src/github.com/dunzoit/pubsub/src/zsource.sh
+# export SLACK_URL="https://hooks.slack.com/workflows/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"
+
+export PATH=$PATH:/Users/gosahai/.toolbox/bin:/Users/gosahai/.depot_tools
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
+
+export PATH="/Applications/Fortify/Fortify_SCA_23.1.0/bin:$PATH"
+export PATH="/opt/homebrew/opt/node@18/bin:$PATH"

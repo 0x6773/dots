@@ -122,3 +122,11 @@ PS1='\[\e]0;\w\a\]\n\[\e[00;33m\][\d \A\[\e[01;35m\]\w\[\e[00;33m\]]\[\e[0m\]\n\
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+export PATH=$PATH:/Users/gosahai/.toolbox/bin
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Set up asdf for Python package management
+. $HOME/.asdf/asdf.sh
+
+export PATH="/Applications/Fortify/Fortify_SCA_23.1.0/bin:$PATH"

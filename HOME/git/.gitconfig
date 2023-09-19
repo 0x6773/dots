@@ -1,7 +1,8 @@
 [user]
 	name = Govind Sahai
-	email = gsiitbhu@gmail.com
-	signingkey = 8F03E619822EE19B
+	#email = gsiitbhu@gmail.com
+	#signingkey = 8F03E619822EE19B
+	email = gosahai@amazon.com
 [credential]
 	helper = cache --timeout=360000
 [push]
@@ -20,12 +21,6 @@
 [url "git@gitlab.com:"]
 	insteadOf = gl:
 
-[includeIf "gitdir:~/work/"]
-	path = ~/.gitconfig-work
-[includeIf "gitdir:~/go/src/github.com/dunzoit/"]
-	path = ~/.gitconfig-work
-[merge]
-	tool = meld
 [pull]
 	ff = only
 	default = current
@@ -57,3 +52,5 @@
 	whitespace = red reverse
 [diff-so-fancy]
 	stripLeadingSymbols = false
+[alias]
+	dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)%an <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order

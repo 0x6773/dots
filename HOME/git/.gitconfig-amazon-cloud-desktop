@@ -22,3 +22,5 @@
     pushInsteadOf = ssh://gosahai@gerrit.ereader.amazon.dev:9418/
 [color]
 	ui = auto
+[safe]
+	directory = /local/home/gosahai/juno/mainline/repo/java/framework/kaf

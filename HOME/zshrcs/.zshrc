@@ -162,3 +162,8 @@ export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
 
 export PATH="/Applications/Fortify/Fortify_SCA_23.1.0/bin:$PATH"
 export PATH="/opt/homebrew/opt/node@18/bin:$PATH"
+
+# if you wish to use IMDS set AWS_EC2_METADATA_DISABLED=false
+
+export AWS_EC2_METADATA_DISABLED=true
+TZ='Asia/Kolkata'; export TZ

@@ -1,0 +1,302 @@
+#!/bin/bash
+#==============================================================================#
+#      AUTHOR(S): Gabe Zellmer (@gzellmer), Matt Eary (@matteary),
+#                 Chris Mazuc (@chrismaz)
+#           NAME: Ubuntu Amazonification Utility
+#        PURPOSE: To Amazonify this Ubuntu device and or instance. By executing
+#                 this script, Amazon Ubuntu resposities will be installed and
+#                 depending on if this script is being executed on a physical
+#                 device or virtual instance, additional Amazon applications
+#                 will be installed.
+#==============================================================================#
+
+#========= Global Varibles =========#
+AMAZON_REPOS_PATH="/etc/apt/sources.list.d/amazon-gir.list"
+AMAZON_REPOS_KEY="https://zim.client-eng.a2z.com/upstream-replicator-signing-key/prod/20181010_053041.asc"
+DEBIAN_FRONTEND="noninteractive"
+LOGFILE="/var/log/amazonify.log"
+PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+PREDEPS="wget apt-transport-https lsb-release"
+RELEASE="$(lsb_release -cs)"
+SHORTVER="$(lsb_release -rs | cut -d. -f1)"
+WSL="$(uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/ip')"
+WSL="$(echo ${WSL} | tr '[:upper:]' '[:lower:]')"
+
+#========= Arrays =========#
+declare -a SUPPORTED_RELEASES=(bionic focal jammy)
+
+#========= Exit Codes =========#
+ERROR_INVALID_FLAG="1"            # Invalid flag provided to script
+ERROR_INVALID_ARG="2"             # Invalid argument provided to a flag
+ERROR_INVALID_SYSTYPE="3"         # Invalid system type used
+ERROR_INVALID_PERMS="4"           # Invalid run permissions for script
+ERROR_INVALID_RELEASE="5"         # Invalid Ubuntu release detected
+
+#========= Function Defintions =========#
+usage(){
+    cat << EOF
+
+    *********************************************************************************
+
+    REQUIREMENTS:
+    As this script makes modifications to the local system, it requires
+    either sudo permissions or the root account execute this script.
+
+    Lastly, the -t type flag is also required.
+
+    DESCRIPTION:
+    This script will configure the local Ubuntu computer as an Amazon
+    Amazonified device.
+
+    INFORMATION:
+    If applicable and you have any open applications, please close them
+    now.
+
+    For physical devices: if you have already created a local user account
+    that matches your Amazon alias/username, then you will have problems
+    with Kerberos. Please rename your existing account before continuing
+    the execution of this script.
+
+    sudo usermod -l username-backup username
+    sudo groupmod --new-name username-backup username
+
+    Your existing home directory will not be modified and can be moved
+    to /home/ANT.AMAZON.COM once the Amazonification has completed.
+    Ownership of your home directory will need to be updated to reflect
+    the new UID assignment.
+
+    For Windows Subsystem for Linux(WSL) instances: it is recommended
+    that your WSL username match your Amazon alias/username for services
+    like Brazil and mwinit to work correctly.
+
+    USAGE: $0 [-t] <repos/wsl/core/full> [-h]
+
+    OPTIONS:
+        -t  TYPE[REQUIRED]: One type must be specified of either <repos/wsl/core/full>
+        -h  HELP: Print the help for this script
+
+    EXAMPLES:
+    # Amazonify this device with updating only the local system repositories.
+    $ $0 -t repos
+
+    # Amazonify this device with the Windows Subsystem for Linux(WSL) experience.
+    $ $0 -t wsl
+
+    # Amazonify this device with the Core experience (for your Dev Desktop).
+    $ $0 -t core
+
+    # Amazonify this device with the Full experience (for your laptop or desktop).
+    $ $0 -t full
+
+    *********************************************************************************
+EOF
+}
+
+is_inside_docker() {
+    [ -f /.dockerenv ]
+}
+
+sudo_root_check(){
+    if [[ $(id -u) -ne 0 ]]; then
+        printf "[WARN] Please run this script with either the root account or sudo.\n" >&2
+        usage
+        exit  ${ERROR_INVALID_PERMS}
+    fi
+}
+
+install_dependencies(){
+    printf "[INFO] Installing pre-dependencies...\n" >&2
+    apt-get update 2>&1 | tee -a ${LOGFILE}
+    apt-get -yq install ${PREDEPS} 2>&1 | tee -a ${LOGFILE}
+}
+
+supported_release_check(){
+    if [[ ${SUPPORTED_RELEASES[@]} =~ $RELEASE ]]; then
+        printf "[INFO] Detected release of Ubuntu is currectly supported.\n" >&2
+    else
+        printf "[ERROR] The detected release of Ubuntu is currently not supported by Amazon.\n" >&2
+        exit ${ERROR_INVALID_RELEASE}
+    fi
+}
+
+amazon_ubuntu_repositories(){
+    printf "[INFO] Retrieving Amazon repository signing key and adding it...\n" >&2
+    wget -qO - --no-check-certificate ${AMAZON_REPOS_KEY} | apt-key add - >> ${LOGFILE} 2>&1
+
+    printf "[INFO] Adding Amazon Ubuntu repositories to APT source list...\n" >&2
+    cat > ${AMAZON_REPOS_PATH} << EOF
+    deb http://cascadia.corp.amazon.com/gir/${RELEASE}-amazon amazon main
+    deb https://zim.client-eng.a2z.com/ubuntu/prod ${RELEASE} main restricted universe
+    deb https://zim.client-eng.a2z.com/ansible/prod ${RELEASE} main
+    deb [arch=amd64] https://zim.client-eng.a2z.com/chrome/prod ${RELEASE} main
+EOF
+
+    printf "[INFO] Updating package information from new repository sources...\n" >&2
+    apt-get update 2>&1 | tee -a ${LOGFILE}
+}
+
+apply_known_ubuntu_fixes(){
+    if [[ ${RELEASE} != "xenial" && ${WSL} != "microsoft" && ! is_inside_docker ]]; then
+        printf "[WARN] Ubuntu Bionic verion 18.04 detected, updating DNS service...\n" >&2
+        apt-get -yq install dnsmasq 2>&1 | tee -a ${LOGFILE}
+        systemctl stop systemd-resolved
+        rm /etc/resolv.conf
+        ln -s /var/run/NetworkManager/resolv.conf /etc/resolv.conf
+        echo 'DNSStubListener=no' >> /etc/systemd/resolved.conf
+        echo '[main]' > /etc/NetworkManager/conf.d/dnsmasq.conf
+        echo 'dns=dnsmasq' >> /etc/NetworkManager/conf.d/dnsmasq.conf
+        systemctl start systemd-resolved
+    fi
+}
+
+amazonify_ubuntu_core(){
+    printf "[INFO] Performing a Core Amazonification of this device...\n" >&2
+    apt-get -yq dist-upgrade 2>&1 | tee -a ${LOGFILE}
+    apt-get -yq install amazon-core mwinit amazon-security-bastion-prod 2>&1 | tee -a ${LOGFILE}
+}
+
+amazonify_ubuntu_full(){
+    if [[ ${WSL} != "microsoft" ]]; then
+        printf "[INFO] Performing a Full Amazonification of this device...\n" >&2
+        apt-get -yq dist-upgrade 2>&1 | tee -a ${LOGFILE}
+        apt-get -yq install amazon-core amazon-role-dev mwinit amazon-security-bastion-prod 2>&1 | tee -a ${LOGFILE}
+    else
+        printf "[ERROR] A Full Amazonification is not intended for WSL.\n"
+        exit ${ERROR_INVALID_SYSTYPE}
+    fi
+}
+
+enable_laptop_role(){
+    printf "[INFO] Checking if this device is a laptop or not...\n" >&2
+    if [[ ${WSL} != "microsoft" ]] && ! is_inside_docker && dmsetup status | grep -q crypt; then >> /dev/null
+        printf "[WARN] Encrypted volume found, enabling laptop role.\n" >&2
+        /usr/sbin/role enable laptop
+    else
+        printf "[WARN] This doesn't look like a laptop, not enabling the laptop role.\n" >&2
+    fi
+}
+
+information(){
+    cat << EOF
+
+    *********************************************************************************
+
+    [WARN] To complete the Amazonification of this device, a reboot is required to
+    finish the provisioning process.
+
+    *********************************************************************************
+EOF
+}
+
+information_repos(){
+    cat << EOF
+
+    *********************************************************************************
+
+    [INFO] Amazonification of the local repositories is complete.
+
+    *********************************************************************************
+EOF
+}
+
+information_wsl(){
+    cat << EOF
+
+    *********************************************************************************
+
+    [INFO] Amazonification of this WSL instance is complete.
+
+    *********************************************************************************
+EOF
+}
+
+reboot(){
+
+    if is_inside_docker; then 
+        printf "[INFO] Reboot not needed as env in inside docker !!!\n" >& 2
+        return
+    fi
+
+    printf "[WARN] Initiating a reboot in 10 seconds unless CTRL+C is pressed...\n" >&2
+    sleep 10
+    /sbin/shutdown -r now
+}
+
+main(){
+    type_flag="false"
+    sudo_root_check
+    export DEBIAN_FRONTEND=$DEBIAN_FRONTEND 
+    while getopts ':t:h' arg; do
+        case $arg in
+            t)
+                type_flag="true"
+                type="${OPTARG}"
+                if [[ $type == 'wsl' || $type == 'core' || $type == 'full' ]]; then
+                    printf "[INFO] Running install options for %s\n" ${type} >&2
+                    install_dependencies
+                    supported_release_check
+                    amazon_ubuntu_repositories
+                    apply_known_ubuntu_fixes
+                    if [[ ${type} == 'wsl' ]]; then
+                        amazonify_ubuntu_core
+                        information_wsl
+                        exit 0
+                    elif [[ ${type} == 'core' ]]; then
+                        amazonify_ubuntu_core
+                        enable_laptop_role
+                        information
+                        reboot
+                        exit 0
+                    elif [[ ${type} == 'full' ]]; then
+                        amazonify_ubuntu_full
+                        enable_laptop_role
+                        information
+                        reboot
+                        exit 0
+                    fi
+                elif [[ ${type} == 'repos' ]]; then
+                    printf "[INFO] Amazonifying only the Ubuntu repositories...\n" >&2
+                    install_dependencies
+                    supported_release_check
+                    amazon_ubuntu_repositories
+                    information_repos
+                    exit 0
+                else
+                    printf "[ERROR] You must supply a correct value for the type flag: -t\n" >&2
+                    usage
+                    exit ${ERROR_INVALID_FLAG}
+                fi
+                ;;
+            h)
+                usage
+                exit 0
+                ;;
+            \?)
+                printf "[ERROR] Invalid flag: -%s\n" ${OPTARG} >&2
+                usage
+                exit ${ERROR_INVALID_FLAG}
+                ;;
+            :)
+                printf "[ERROR] Missing argument for the flag: -%s\n" ${OPTARG} >&2
+                usage
+                exit ${ERROR_INVALID_ARG}
+                ;;
+            *)
+                printf "[ERROR] Not a recognized flag.\n" >&2
+                usage
+                exit ${ERROR_INVALID_FLAG}
+                ;;
+        esac
+    done
+
+    if [[ ${type_flag} != 'true' ]]; then
+        printf "[ERROR] You must supply a correct value for the type flag: -t\n" >&2
+        usage
+        exit ${ERROR_INVALID_FLAG}
+    fi
+}
+
+#========= Function Calls =========#
+main "$@"
+
+

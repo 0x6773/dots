@@ -5,6 +5,7 @@ set -ex
 # To be run inside docker only
 
 if [ ! -f /.dockerenv ]; then
+    mwinit -o -s
     docker run -it -v ~/juno:/home/$(whoami)/juno \
                -v ~/.ssh:/home/$(whoami)/.ssh:ro \
                -v ~/.gitconfig:/home/$(whoami)/.gitconfig:ro \

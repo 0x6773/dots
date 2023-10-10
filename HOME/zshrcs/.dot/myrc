@@ -1,6 +1,8 @@
 #! /usr/bin/env zsh
 
-local __THIS__DOT_DIR="/Users/gosahai/.dot"
+local __THIS__DOT_DIR="/Users/gosahai/.dot" # for mac
+
+is_amazon_cloud_desktop && __THIS__DOT_DIR="/home/gosahai/.dot"
 
 source ${__THIS__DOT_DIR}/aliasrc
 

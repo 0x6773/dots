@@ -26,7 +26,7 @@ export ZSH=$HOME/.oh-my-zsh
 if is_amazon_mac; then
 	#ZSH_THEME="af-magic"
 	ZSH_THEME="powerlevel10k/powerlevel10k"
-elif is_wsl; then
+elif is_wsl || is_amazon_cloud_desktop; then
 	ZSH_THEME="afowler"
 else
 	ZSH_THEME="superjarin"

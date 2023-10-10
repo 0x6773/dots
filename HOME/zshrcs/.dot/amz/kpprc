@@ -6,7 +6,7 @@ function __kpp_builder_helper() {
     ((!$#)) && echo -e "[!]${cyan} Provide the path name" && return
     local BB_PATH=${1}
     pushd -q ${BB_PATH}
-    echo -e "${lgreen}[!] Building project: $(pwd)${NC}"
+    echo -e "${lgreen}[!] Building KPP Project: $(pwd)${NC}"
     brazil-build --platform eink
     popd -q
 }
@@ -25,6 +25,7 @@ function kpp_deploy() {
     ((!$#)) && echo -e "[!]${cyan} Provide the project" && return
     local PROJECT_NAME=${1}
     local KPP_MAIN_APPV2_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainApp/build/bin/eink/KPPMainAppV2"
+    echo -e "${lcyan}[!] Deploying KPP Project: ${PROJECT_NAME}"
     mkdir -p /tmp/kpp
     strip -o /tmp/kpp/KPPMainAppV2 ${KPP_MAIN_APPV2_PATH}
     adb push /tmp/kpp/KPPMainAppV2 /mnt/us/KPPMainAppV2

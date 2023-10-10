@@ -7,6 +7,7 @@ function kppui_build_full() {
     local PROJECT_NAME=${1}
     local KPP_MAIN_APP_FRONT_END_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainAppFrontEnd"
     pushd -q "${KPP_MAIN_APP_FRONT_END_PATH}"
+    echo -e "${lgreen}[!] Building Full KPPUI Project: ${PROJECT_NAME} | $(pwd)${NC}"
     brazil-recursive-cmd 'brazil-build'
     popd -q
 }
@@ -16,6 +17,7 @@ function kppui_build_partial() {
     local PROJECT_NAME=${1}
     local KPP_MAIN_APP_FRONT_END_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainAppFrontEnd"
     pushd -q "${KPP_MAIN_APP_FRONT_END_PATH}"
+    echo -e "${lgreen}[!] Building Partial KPPUI Project: ${PROJECT_NAME} | $(pwd)${NC}"
     npm run bundle:release:all
     # this creates hbc files(js) and mo files(locales)
     # npm run build
@@ -33,6 +35,7 @@ function kppui_checks() {
     local PROJECT_NAME=${1}
     local KPP_MAIN_APP_FRONT_END_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainAppFrontEnd"
     pushd -q "${KPP_MAIN_APP_FRONT_END_PATH}"
+    echo -e "${lcyan}[!] Running KPPUI Checks on Project: ${PROJECT_NAME} | $(pwd)${NC}"
 
     npm run prettier
     npm run tsc
@@ -44,6 +47,7 @@ function kppui_deploy() {
     ((!$#)) && echo -e "[!]${cyan} Provide the project" && return
     local PROJECT_NAME=${1}
     local KPP_MAIN_APP_FRONT_END_BUILD_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainAppFrontEnd/build/eink-artifactory/app/KPPMainApp"
+    echo -e "${lcyan}[!] Deploying KPPUI Project: ${PROJECT_NAME}"
     adb push ${KPP_MAIN_APP_FRONT_END_BUILD_PATH} /app
 }
 

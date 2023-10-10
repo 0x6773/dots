@@ -1,0 +1,31 @@
+#! /usr/bin/env zsh
+
+local __THIS__DOT_DIR="/Users/gosahai/.dot"
+
+source ${__THIS__DOT_DIR}/aliasrc
+
+source ${__THIS__DOT_DIR}/zshoptrc
+
+source ${__THIS__DOT_DIR}/colorrc
+
+source ${__THIS__DOT_DIR}/gccrc
+
+source ${__THIS__DOT_DIR}/netrc
+
+is_amazon_mac && source ${__THIS__DOT_DIR}/amz/sourcerc
+
+unset SSH_ASKPASS
+
+if is_mac; then 
+    eval $(gdircolors -b ~/.dot/LS_COLORS)
+else
+    eval $(dircolors -b ~/.dot/LS_COLORS)
+fi
+
+swap()         
+{
+    local TMPFILE=tmp.$$;
+    mv "${1}" $TMPFILE && mv "${2}" "${1}" && mv "${TMPFILE}" "${2}";
+}
+
+is_wsl && cd

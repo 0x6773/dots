@@ -35,8 +35,8 @@ has_docker() {
     is_on_path docker
 }
 
-is_flipkart_mac() {
-	is_mac && [[ $(hostname -s) =~ "g0vinds-LaP" ]] || [[ $(hostname) =~ "flipkart" ]]
+is_amazon_mac() {
+    is_mac && [[ $(hostname) =~ "bcd0743feec0" ]]
 }
 
 is_wsl() {
@@ -45,4 +45,8 @@ is_wsl() {
 
 is_ubuntu() {
     is_linux && grep -iEq 'ubuntu' /etc/issue
+}
+
+is_amazon_cloud_desktop() {
+    is_linux && [[ $(hostname) =~ "dev-dsk-gosahai" ]] && [[ $(hostname) =~ "eu-west-1.amazon.com" ]]
 }

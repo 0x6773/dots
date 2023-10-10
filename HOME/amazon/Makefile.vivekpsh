@@ -1,0 +1,219 @@
+slate_root ?= ~/slate
+slate_src_dir ?= ${slate_root}/src
+source_dir ?= ${slate_src_dir}/out/default
+sysroot_dir ?= /mnt/us/browser
+dest_webview_dir ?= webview
+cdd_hostname ?= dev-dsk-vivekpsh-1b-080fabf5.eu-west-1.amazon.com
+user@hostname ?= ${USER}@${cdd_hostname}
+debug_dir ?= ${slate_root}/debug
+temp_dir ?= /Users/vivekpsh/Vivekpsh/slate/temp
+squashfs_dir ?= ${temp_dir}/chromium_squashfs
+
+# Bold High Intensity Blue color
+blue_color := \033[1;94m
+
+# Bold High Intensity Cyan color
+cyan_color := \033[1;96m
+
+# No color
+reset_color := \033[0m
+
+# # Host
+# host_workspace_dir ?= ~/Vivekpsh/slate/temp
+# host_temp_dir ?= ${host_workspace_dir}/temp
+# host_squashfs_dir ?= ${host_temp_dir}/chromium_squashfs
+
+# # Device
+# device_mnt_us_dir ?= /mnt/us
+
+# # Cloud Desktop (CDD)
+# slate_workspace_dir ?= ~/slate
+# slate_src_dir ?= ${slate_root}/src
+# slate_out_dir ?= ${slate_src_dir}/out/default
+
+# cdd_hostname ?= dev-dsk-vivekpsh-1b-080fabf5.eu-west-1.amazon.com
+# user@hostname ?= ${USER}@${cdd_hostname}
+
+.PHONY: all
+all: build strip-binary download squash push-squash mount-squash
+
+.PHONY: clean
+clean:
+	cd ${temp_dir} \
+	&& rm -rf kindle_browser
+
+.PHONY: download
+download: clean
+	scp ${user@hostname}:${source_dir}/stripped/kindle_browser ${temp_dir}
+# scp ${user@hostname}:${source_dir}/kindle_browser.pak ${temp_dir}
+
+.PHONY: push
+push:
+	adb shell "cd ${sysroot_dir} && mntroot rw"
+	cd ${temp_dir} \
+	&& adb push kindle_browser ${sysroot_dir}/out
+	# && adb push kindle_browser.pak ${sysroot_dir}/out
+
+.PHONY: retrieve-squashfs
+retrieve-squashfs:
+	rm -rf ${temp_dir}/chromium.sqsh
+	adb pull /usr/bin/chromium.sqsh ${temp_dir}
+
+.PHONY: unsquashfs
+unsquashfs:
+	rm -rf ${squashfs_dir}
+	unsquashfs -d ${squashfs_dir} ${temp_dir}/chromium.sqsh
+
+.PHONY: squash
+squash:
+	rm -rf ${temp_dir}/chromium.sqsh
+	rm -rf ${squashfs_dir}/bin/kindle_browser
+	cp ${temp_dir}/kindle_browser ${squashfs_dir}/bin/
+	patchelf --set-interpreter /usr/bin/chromium/lib/ld-linux-armhf.so.3 ${squashfs_dir}/bin/kindle_browser
+	mksquashfs ${squashfs_dir} ${temp_dir}/chromium.sqsh
+
+.PHONY: push-squash
+push-squash:
+	adb push ${temp_dir}/chromium.sqsh /mnt/us
+
+.PHONY: mount-squash
+mount-squash:
+	adb shell umount /chroot/usr/bin/chromium
+# adb shell losetup -d 17
+# adb shell mount -o loop=17 -t squashfs /mnt/us/chromium.sqsh /chroot/usr/bin/chromium
+# adb shell 'LOOP_DEVICE_COUNT=`ls -l /dev/loop/ | wc -l`; LOOP_DEVICE_COUNT=`expr $$LOOP_DEVICE_COUNT - 2`; losetup -d $$LOOP_DEVICE_COUNT; mount -o loop=/dev/loop/$$LOOP_DEVICE_COUNT -t squashfs /mnt/us/chromium.sqsh /chroot/usr/bin/chromium'
+	adb shell 'FREE_LOOP_DEVICE=`losetup -f | cut -c 10-`; mount -o loop=/dev/loop/$$FREE_LOOP_DEVICE -t squashfs /mnt/us/chromium.sqsh /chroot/usr/bin/chromium'
+
+# .PHONY: squash
+# squash:
+#     cd ~/Documents/ \
+#         && cp ~/slate/kindle_browser ./squashfs-root/bin/ \
+#         && cd squashfs-root \
+#         && patchelf --set-interpreter /usr/bin/chromium/lib/ld-linux-armhf.so.3 ./bin/kindle_browser \
+#         && cd .. \
+#         && touch chromium.sqsh \
+#         && rm chromium.sqsh \
+#         && mksquashfs squashfs-root chromium.sqsh \
+#         && adb shell mntroot rw \
+#         && adb shell umount /usr/bin/chromium \
+#         && adb shell rm /usr/bin/chromium.sqsh \
+#         && adb push  ~/Documents/chromium.sqsh /usr/bin/ \
+#         && adb shell "cd /usr/bin && mount -o loop -t squashfs chromium.sqsh chromium"
+
+.PHONY: build
+build:
+	ssh ${user@hostname} "docker exec -w ~/slate/src slate /home/vivekpsh/slate/depot_tools/autoninja -C out/default kindle_browser"
+
+.PHONY: build-shell
+build-shell:
+	ssh ${user@hostname} "docker exec -w ~/slate/src slate /home/vivekpsh/slate/depot_tools/autoninja -C out/default kepler_content_shell"
+
+.PHONY: build-process
+build-process:
+	ssh ${user@hostname} "docker exec -w ~/slate/src slate /home/vivekpsh/slate/depot_tools/autoninja -C out/default kepler_content_process"
+
+.PHONY: install-deps
+install-deps:
+	cd ${temp_dir} && rm -rf libGLESv2.so libGLESv2.so.TOC libEGL.so libEGL.so.TOC libGLX.so libGLX.so.0 libGLX.so.0.0.0 libGL.so.1
+	#  libGLdispatch.so.0
+	scp ${user@hostname}:${source_dir}/libGLESv2.so ${temp_dir}
+	scp ${user@hostname}:${source_dir}/libGLESv2.so.TOC ${temp_dir}
+
+	cd ${temp_dir} \
+		&& adb shell mkdir -p ${sysroot_dir}/out/swiftshader \
+		&& adb push libGLESv2.so ${sysroot_dir}/out/swiftshader \
+		&& adb push libGLESv2.so.TOC ${sysroot_dir}/out/swiftshader \
+
+
+.PHONY: strip-binary
+strip-binary:
+	ssh ${user@hostname} "cd slate/src \
+		&& mkdir -p out/default/stripped \
+		&& ./native_client/toolchain/linux_x86/nacl_arm_glibc/arm-nacl/bin/strip \
+			-o out/default/stripped/kindle_browser \
+			out/default/kindle_browser \
+		&& du -sh out/default/stripped/kindle_browser"
+
+.PHONY: setup-gdb-on-cdd
+setup-gdb-on-cdd:
+	ssh ${user@hostname} "mkdir -p ${debug_dir}/${dest_webview_dir} \
+		&& cp ${source_dir}/kepler_content_shell ${debug_dir}/${dest_webview_dir} \
+		&& cp ${source_dir}/libkepler_webview.so ${debug_dir}/usr/lib"
+
+.PHONY: open-gdb-on-cdd
+open-gdb-on-cdd:
+	ssh -R 8080:localhost:8080 ${user@hostname}
+
+.PHONY: open-gdb-on-kindle
+open-gdb-on-kindle:
+	adb forward tcp:8080 tcp:9123
+	adb shell "cd ${sysroot_dir} \
+		&& gdbserver localhost:9123 chroot . ./${dest_webview_dir}/kepler_content_shell"
+
+# set sysroot /home/vivekpsh/slate/debug
+# ./native_client/toolchain/linux_x86/nacl_arm_glibc/arm-nacl/bin/strip \
+# 			-o out/default/stripped/kindle_browser \
+# 			out/default/kindle_browser
+# 			scp vivekpsh@dev-dsk-vivekpsh-1b-080fabf5.eu-west-1.amazon.com:/home/vivekpsh/slate/src/out/default/stripped/kindle_browser .
+
+.PHONY: reset-version
+reset-version:
+	adb shell "cat /mnt/us/system/version.txt"
+	adb shell "echo 'Kindle 0.0.0 (000000 0000)' > /mnt/us/system/version.txt"
+
+.PHONY: get-cookies-count
+get-cookies-count:
+	adb shell "sqlite3 /mnt/us/browser/var/local/browser/cookies 'SELECT COUNT(*) FROM cookies;'"
+	@echo
+
+.PHONY: get-cookies
+get-cookies:
+	adb shell "sqlite3 /mnt/us/browser/var/local/browser/cookies 'SELECT * FROM cookies;'"
+	@echo
+
+.PHONY: remove-cookies
+remove-cookies:
+	adb shell "rm -rf /mnt/us/browser/var/local/browser/cookies*"
+	@echo
+
+.PHONY: restart-mesquite
+restart-mesquite:
+	@echo "${blue_color}Restarting Mesquite${reset_color}"
+	adb shell "kill -9 $$(pidof mesquite)"
+	@echo
+
+.PHONY: kill-browser
+kill-browser:
+	@echo "${blue_color}Killing kindle_browser${reset_color}"
+	adb shell 'kill -9 $$(pidof kindle_browser)'
+	@echo
+
+.PHONY: pidof-browser
+pidof-browser:
+	@echo "${blue_color}Getting pid of kindle_browser${reset_color}"
+	adb shell pidof kindle_browser
+	@echo
+
+.PHONY: check-proxy-health
+check-proxy-health:
+	@echo "${blue_color}Checking FiNTS proxy health${reset_color}"
+	adb shell "curl -v -s -x kindle-proxy.amazon.com:80 \
+		-H \"x-fsn:jRirSmOeQxufGyglCgv6ETdt0jua83oqSnqym22WyEghsufK0sgPDgNMJjjQ+KLd/7Sfw8C/QtaSfEM8b75zUREIbtXpC8nAkjpUyP81+DVIgg3pQG7nNIzuV9RT3XzXqPscO08liRY=\" \
+		http://s3.amazonaws.com/fints-monitoring/health-check.txt"
+	@echo
+
+.PHONY: enable-chromium
+enable-chromium:
+	@echo "${blue_color}Enabling Chromium${reset_color}"
+	adb shell "sqlite3 /var/local/appreg.db \"update properties set value = '/usr/bin/browser -j' where handlerId = 'com.lab126.browser' and name = 'command'\""
+	adb shell "sqlite3 /var/local/appreg.db \"update properties set value = 'unloadWhenNeeded' where handlerId = 'com.lab126.browser' and name = 'unloadPolicy'\""
+	adb shell "sqlite3 /var/local/appreg.db \"select * from properties where handlerId = 'com.lab126.browser'\""
+	@echo
+
+# .PHONY: enable-mesquite
+# enable-chromium:
+# 	@echo "${blue_color}Enabling Chromium${reset_color}"
+# 	adb shell "sqlite3 /var/local/appreg.db \"update properties set value = '/usr/bin/browser -j' where handlerId = 'com.lab126.browser' and name = 'command'\""
+# 	adb shell "sqlite3 /var/local/appreg.db \"update properties set value = 'unloadWhenNeeded' where handlerId = 'com.lab126.browser' and name = 'unloadPolicy'\""
+# 	adb shell "sqlite3 /var/local/appreg.db \"select * from properties where handlerId = 'com.lab126.browser'\""
+# 	@echo

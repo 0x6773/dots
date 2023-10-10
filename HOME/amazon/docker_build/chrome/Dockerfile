@@ -40,4 +40,3 @@ WORKDIR /home/${username}
 
 # Generate keygen for mwinit to sign
 RUN ssh-keygen -t ecdsa -b 521 -N '' -f ~/.ssh/id_ecdsa
-

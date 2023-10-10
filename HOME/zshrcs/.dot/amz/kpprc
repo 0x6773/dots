@@ -1,0 +1,41 @@
+#! /usr/bin/env zsh
+
+local _KPP_ALL_DIR="/Users/gosahai/workplace/KPPAll"
+
+function __kpp_builder_helper() {
+    ((!$#)) && echo -e "[!]${cyan} Provide the path name" && return
+    local BB_PATH=${1}
+    pushd -q ${BB_PATH}
+    echo -e "${lgreen}[!] Building project: $(pwd)${NC}"
+    brazil-build --platform eink
+    popd -q
+}
+
+function kpp_build_dep() {
+    ((!$#)) && echo -e "[!]${cyan} Provide the project and dependent modules" && return
+    local PROJECT_NAME=${1}
+    shift
+
+    for __DEP in ${@} "KPPMainApp"; do
+        __kpp_builder_helper "${_KPP_ALL_DIR}/${PROJECT_NAME}/src/${__DEP}" 
+    done
+}
+
+function kpp_deploy() {
+    ((!$#)) && echo -e "[!]${cyan} Provide the project" && return
+    local PROJECT_NAME=${1}
+    local KPP_MAIN_APPV2_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainApp/build/bin/eink/KPPMainAppV2"
+    mkdir -p /tmp/kpp
+    strip -o /tmp/kpp/KPPMainAppV2 ${KPP_MAIN_APPV2_PATH}
+    adb push /tmp/kpp/KPPMainAppV2 /mnt/us/KPPMainAppV2
+    adb shell mount -o remount,rw /
+    adb shell rm /app/bin/KPPMainApp
+    adb shell ln -s /mnt/us/KPPMainAppV2 /app/bin/KPPMainApp
+}
+
+function kpp_bd() {
+    ((!$#)) && echo -e "[!]${cyan} Provide the project and dependent modules" && return
+    local PROJECT_NAME=${1}
+    kpp_build_dep ${@}
+    kpp_deploy ${PROJECT_NAME}
+}

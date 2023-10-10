@@ -21,13 +21,3 @@ has_docker && archdocker() {
 	echo "Attaching to container..."
 	docker attach ${CONTAINER}
 }
-
-lssh() {
-	local HOST=${1}
-	echo "While loop over ssh: ${HOST}"
-	ssh ${HOST}
-	while [ $? -ne 0 ]; do 
-		sleep 1s; 
-		ssh ${HOST}; 
-	done
-}

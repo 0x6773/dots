@@ -9,15 +9,6 @@ alias ..g='cd $(git rev-parse --show-toplevel)'
 
 alias sudo='sudo '
 
-#copy
-cz() {
-  if is_linux; then
-    echo "$($@)"|xclip -selection clipboard;
-  elif is_mac; then
-    echo "$($@)"|pbcopy;
-  fi
-}
-
 if is_mac; then
   alias l="gls -lahG --color"
   alias ls="gls -G --color"

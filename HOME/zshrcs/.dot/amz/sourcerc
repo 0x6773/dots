@@ -1,0 +1,9 @@
+#! /usr/bin/env zsh
+
+local __THIS__AMAZON_DOT_DIR="/Users/gosahai/.dot/amz"
+
+source "${__THIS__AMAZON_DOT_DIR}/chromiumrc"
+
+source "${__THIS__AMAZON_DOT_DIR}/kppuirc"
+
+source "${__THIS__AMAZON_DOT_DIR}/kpprc"

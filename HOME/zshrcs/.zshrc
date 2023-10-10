@@ -127,7 +127,7 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=12"
 unsetopt correctall
 
 if is_mac; then
-	export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/gosahai/.toolbox/bin:/Users/gosahai/.depot_tools:/opt/homebrew/opt/node@18/bin:/opt/homebrew/opt/binutils/bin"
+	export PATH="/opt/homebrew/opt/binutils/bin:$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/gosahai/.toolbox/bin:/Users/gosahai/.depot_tools:/opt/homebrew/opt/node@18/bin"
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 	eval "$(/opt/homebrew/bin/brew shellenv)"

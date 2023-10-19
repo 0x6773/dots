@@ -14,7 +14,7 @@ source ${__THIS__DOT_DIR}/gccrc
 
 source ${__THIS__DOT_DIR}/netrc
 
-is_amazon_mac && source ${__THIS__DOT_DIR}/amz/sourcerc
+source ${__THIS__DOT_DIR}/amz/sourcerc
 
 unset SSH_ASKPASS
 

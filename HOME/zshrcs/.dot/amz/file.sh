@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+# old file, dont source this
+
 local _SLATE_LOCAL_DIR="/Users/gosahai/workplace/slate_cd"
 local _SLATE_CD_DIR="/home/gosahai/slate"
 

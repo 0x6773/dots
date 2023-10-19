@@ -2,8 +2,21 @@
 
 local __THIS__AMAZON_DOT_DIR="/Users/gosahai/.dot/amz"
 
-source "${__THIS__AMAZON_DOT_DIR}/chromiumrc"
+function _print_err_ms() {
+    echo -e "${lred}[-] The above command has failed"
+    osascript -e 'display notification "Check the terminal logs" with title "[!] FAILED CMD"'
+}
 
-source "${__THIS__AMAZON_DOT_DIR}/kppuirc"
+is_amazon_mac && source "${__THIS__AMAZON_DOT_DIR}/chromiumrc"
 
-source "${__THIS__AMAZON_DOT_DIR}/kpprc"
+is_amazon_mac && source "${__THIS__AMAZON_DOT_DIR}/kppuirc"
+
+is_amazon_mac && source "${__THIS__AMAZON_DOT_DIR}/kpprc"
+
+is_amazon_mac && source "${__THIS__AMAZON_DOT_DIR}/kindlerc"
+
+is_amazon_mac && source "${__THIS__AMAZON_DOT_DIR}/junorc"
+
+
+
+is_amazon_cloud_desktop && source "${__THIS__AMAZON_DOT_DIR}/clouddesktoprc"

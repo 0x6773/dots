@@ -8,11 +8,11 @@ function kppui_build_full() {
     local KPP_MAIN_APP_FRONT_END_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainAppFrontEnd"
     pushd -q "${KPP_MAIN_APP_FRONT_END_PATH}"
     echo -e "${lgreen}[!] Building Full KPPUI Project: ${PROJECT_NAME} | $(pwd)${NC}"
-    brazil-recursive-cmd 'brazil-build'
+    brazil-recursive-cmd 'brazil-build' || {_print_err_ms; return 1}
     popd -q
 }
 
-function kppui_build_partial() {
+function kppui_build2_partial() {
     ((!$#)) && echo -e "[!]${cyan} Provide the project" && return
     local PROJECT_NAME=${1}
     local KPP_MAIN_APP_FRONT_END_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainAppFrontEnd"
@@ -27,6 +27,17 @@ function kppui_build_partial() {
     cp build/include/KPPMainApp.js.hbc build/eink-artifactory/app/KPPMainApp/js
     cp -r build/include/mo/* build/eink-artifactory/app/KPPMainApp/locale
 
+    popd -q
+}
+
+function kppui_build_partial() {
+    ((!$#)) && echo -e "[!]${cyan} Provide the project" && return
+    local PROJECT_NAME=${1}
+    local KPP_MAIN_APP_FRONT_END_PATH="${_KPP_ALL_DIR}/${PROJECT_NAME}/src/KPPMainAppFrontEnd"
+    pushd -q "${KPP_MAIN_APP_FRONT_END_PATH}"
+    echo -e "${lgreen}[!] Building Partial KPPUI Project: ${PROJECT_NAME} | $(pwd)${NC}"
+    echo "Brazil build"
+    brazil-build run-s bundle:release:all hermes-precompile:mainapp:release create-eink-artifact:js create-eink-artifact:res || {_print_err_ms; return 1}
     popd -q
 }
 
@@ -54,14 +65,14 @@ function kppui_deploy() {
 function kppui_bd_full() {
     ((!$#)) && echo -e "[!]${cyan} Provide the project" && return
     local PROJECT_NAME=${1}
-    kppui_build_full ${PROJECT_NAME}
-    kppui_deploy ${PROJECT_NAME}
+    kppui_build_full ${PROJECT_NAME} || {_print_err_ms; return 1}
+    kppui_deploy ${PROJECT_NAME} || {_print_err_ms; return 1}
 }
 
 function kppui_bd_partial() {
     ((!$#)) && echo -e "[!]${cyan} Provide the project" && return
     local PROJECT_NAME=${1}
     # kppui_checks ${PROJECT_NAME}
-    kppui_build_partial ${PROJECT_NAME}
-    kppui_deploy ${PROJECT_NAME}
+    kppui_build_partial ${PROJECT_NAME} || {_print_err_ms; return 1}
+    kppui_deploy ${PROJECT_NAME} || {_print_err_ms; return 1}
 }

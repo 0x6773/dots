@@ -1,0 +1,9 @@
+#! /usr/bin/env zsh
+
+function kin_cleanup() {
+    echo -e "${red}[!] Cleaning up logs from device${NC}"
+    set -x
+    adb shell rm -f '/mnt/us/HomeDigest_*' '/mnt/us/Indexer_*'
+    adb shell rm -rf '/mnt/us/documents/*crash*' '/mnt/us/kindle_browser_*' '/mnt/us/*.core'
+    set +x
+}

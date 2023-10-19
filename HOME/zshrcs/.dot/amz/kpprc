@@ -7,7 +7,7 @@ function __kpp_builder_helper() {
     local BB_PATH=${1}
     pushd -q ${BB_PATH}
     echo -e "${lgreen}[!] Building KPP Project: $(pwd)${NC}"
-    brazil-build --platform eink
+    brazil-build --platform eink || {_print_err_ms; return 1}
     popd -q
 }
 
@@ -17,7 +17,7 @@ function kpp_build_dep() {
     shift
 
     for __DEP in ${@} "KPPMainApp"; do
-        __kpp_builder_helper "${_KPP_ALL_DIR}/${PROJECT_NAME}/src/${__DEP}" 
+        __kpp_builder_helper "${_KPP_ALL_DIR}/${PROJECT_NAME}/src/${__DEP}" || {_print_err_ms; return 1}
     done
 }
 
@@ -37,6 +37,6 @@ function kpp_deploy() {
 function kpp_bd() {
     ((!$#)) && echo -e "[!]${cyan} Provide the project and dependent modules" && return
     local PROJECT_NAME=${1}
-    kpp_build_dep ${@}
-    kpp_deploy ${PROJECT_NAME}
+    kpp_build_dep ${@} || {_print_err_ms; return 1}
+    kpp_deploy ${PROJECT_NAME} || {_print_err_ms; return 1}
 }

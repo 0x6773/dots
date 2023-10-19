@@ -1,0 +1,13 @@
+#! /usr/bin/env zsh
+
+# File: https://code.amazon.com/packages/KPPUISetting/blobs/decanter-settings/--/Makefile
+
+
+function _lipc_set_prop() {
+    local LIPC_ID=${1}
+    local _KEY=${2}
+    local _VALUE=${3}
+    adb shell lipc-set-prop ${LIPC_ID} ${_KEY} ${_VALUE}
+}
+
+function l

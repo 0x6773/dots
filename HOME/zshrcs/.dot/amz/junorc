@@ -1,0 +1,28 @@
+#! /usr/bin/env zsh
+
+function _juno_build_recipe() {
+    local BB_RECIPE_NAME=${1}
+    ssh cd "docker exec -w ~/juno/mainline juno ~/juno/build.sh ${BB_RECIPE_NAME}"
+}
+
+function _juno_rsync_pull() {
+    local FROM_DIR=${1}
+    local TO_DIR=${2}
+    mkdir -p ${TO_DIR}
+    rsync -chavzP --stats --no-links cd:${FROM_DIR} ${TO_DIR}
+}
+
+function juno_appmgrd() {
+    _juno_build_recipe "appmgrd_1.0_eink.bb" || {_print_err_ms; return 1}
+    _juno_rsync_pull "/home/gosahai/juno/mainline/build/tmp/work/cortexa7hf-vfp-vfpv4-neon-zeusdistro-linux-gnueabi/appmgrd/1.0-eink/packages-split/appmgrd" "/Users/gosahai/workplace/juno_cd" || {_print_err_ms; return 1}
+    adb shell mount -o remount,rw / || {_print_err_ms; return 1}
+    adb push /Users/gosahai/workplace/juno_cd/appmgrd/* / || {_print_err_ms; return 1}
+    adb shell restart appmgrd || {_print_err_ms; return 1}
+}
+
+function juno_dbus() {
+    _juno_build_recipe "dbus_1.0_eink.bb" || {_print_err_ms; return 1}
+    _juno_rsync_pull "/home/gosahai/juno/mainline/build/tmp/work/cortexa7hf-vfp-vfpv4-neon-zeusdistro-linux-gnueabi/dbus/1.0-eink/packages-split/dbus" "/Users/gosahai/workplace/juno_cd" || {_print_err_ms; return 1}
+    adb shell mount -o remount,rw / || {_print_err_ms; return 1}
+    
+}

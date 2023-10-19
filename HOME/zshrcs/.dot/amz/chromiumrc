@@ -1,7 +1,5 @@
 #! /usr/bin/env zsh
 
-#! /usr/bin/env zsh
-
 local _SLATE_LOCAL_DIR="/Users/gosahai/workplace/slate_cd"
 local _SLATE_CD_DIR="/home/gosahai/slate"
 
@@ -10,6 +8,17 @@ function chr_ninja_build() {
     local NINJA_OUT_DIR=${1}
     echo -e "${green}[+] Build | kindle_browser | ${NINJA_OUT_DIR}"
     ssh cd "docker exec -w ~/slate/src slate ~/slate/depot_tools/autoninja -C ${NINJA_OUT_DIR} kindle_browser"
+}
+
+function chr_ninja_build_and_strip() {
+    ((!$#)) && echo -e "[!]${cyan} Provide the config" && return
+    local NINJA_OUT_DIR=${1}
+    echo -e "${green}[+] Build & Strip | kindle_browser | ${NINJA_OUT_DIR}"
+    ssh cd "docker exec -w ~/slate/src slate ~/slate/depot_tools/autoninja -C ${NINJA_OUT_DIR} kindle_browser && \
+            cd ~/slate/src && \
+            mkdir -p ${NINJA_OUT_DIR}/stripped && \
+            ./native_client/toolchain/linux_x86/nacl_arm_glibc/arm-nacl/bin/strip -o ${NINJA_OUT_DIR}/stripped/kindle_browser ${NINJA_OUT_DIR}/kindle_browser && \
+            du -sh ${NINJA_OUT_DIR}/stripped/kindle_browser"
 }
 
 function chr_strip() {
@@ -42,32 +51,37 @@ function chr_pushsquash() {
     adb push ${_SLATE_LOCAL_DIR}/chromium.sqsh /mnt/us
 }
 
-function chr_mountsquash() {
-    echo -e "${lcyan}[+] Mount Squash | kindle_browser"
+function chr_mount_chr() {
+    local SQUASH_CHR_PATH=${1}
+    echo -e "${lcyan}[+] Mount Squash | kindle_browser | ${SQUASH_CHR_PATH}"
     adb shell umount /chroot/usr/bin/chromium
     local FREE_LOOP_DEVICE="$(adb shell losetup -f | ggrep -Po \\d+)"
-    adb shell mount -o loop=/dev/loop/${FREE_LOOP_DEVICE} -t squashfs /mnt/us/chromium.sqsh /chroot/usr/bin/chromium
+    adb shell mount -o loop=/dev/loop/${FREE_LOOP_DEVICE} -t squashfs ${SQUASH_CHR_PATH} /chroot/usr/bin/chromium    
+}
+
+function chr_mountsquash() {
+    chr_mount_chr "/mnt/us/chromium.sqsh" || {_print_err_ms; return 1}
 }
 
 function chr_build() {
     ((!$#)) && echo -e "[!]${cyan} Provide the config" && return
     local NINJA_OUT_DIR=${1}
-    chr_ninja_build ${NINJA_OUT_DIR}
-    chr_strip ${NINJA_OUT_DIR}
-    chr_rsync_pull ${NINJA_OUT_DIR}
+    chr_ninja_build_and_strip ${NINJA_OUT_DIR} || {_print_err_ms; return 1}
+    # chr_strip ${NINJA_OUT_DIR} || {_print_err_ms; return 1}
+    chr_rsync_pull ${NINJA_OUT_DIR} || {_print_err_ms; return 1}
 }
 
 function chr_deploy() {
-    chr_squash
-    chr_pushsquash
-    chr_mountsquash
+    chr_squash || {_print_err_ms; return 1}
+    chr_pushsquash || {_print_err_ms; return 1}
+    chr_mountsquash || {_print_err_ms; return 1}
 }
 
 function chr_bd() {
     ((!$#)) && echo -e "[!]${cyan} Provide the config" && return
     local NINJA_OUT_DIR=${1}
-    chr_build ${NINJA_OUT_DIR}
-    chr_deploy
+    chr_build ${NINJA_OUT_DIR} || {_print_err_ms; return 1}
+    chr_deploy || {_print_err_ms; return 1}
 }
 
 # Other functions which are not actively being used
@@ -76,6 +90,10 @@ function chr_getsquashfs() {
     rm -r ${_SLATE_LOCAL_DIR}/chromium.original.sqsh ${_SLATE_LOCAL_DIR}/chromium_squashfs
     adb pull /usr/bin/chromium.sqsh ${_SLATE_LOCAL_DIR}/chromium.original.sqsh
     unsquashfs -d ${_SLATE_LOCAL_DIR}/chromium_squashfs ${_SLATE_LOCAL_DIR}/chromium.original.sqsh
+}
+
+function chr_mount_orig() {
+    chr_mount_chr "/usr/bin/chromium.sqsh"
 }
 
 function __chr_fix() {

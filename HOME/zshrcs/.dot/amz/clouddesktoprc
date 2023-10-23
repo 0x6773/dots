@@ -1,9 +1,9 @@
 #! /usr/bin/env zsh
 
 function juno_shell() {
-    docker exec -it juno /bin/bash
+    docker exec -w ~/juno/mainline -it juno /bin/bash
 }
 
 function slate_shell() {
-    docker exec -it shell /bin/bash
+    docker exec -w ~/slate/src -it slate /bin/bash
 }
